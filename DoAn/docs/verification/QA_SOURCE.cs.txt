@@ -1,0 +1,139 @@
+using System.Net;
+using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Common;
+using Falcon.Web.Data;
+using Falcon.Web.Models;
+using Falcon.Web.Models.Admin;
+using Falcon.Web.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+namespace Qa;
+// SQLite exercises relational writes/rollback; suppress ONLY the SQL Server application lock.
+// This harness cannot verify SQL Server locking, decimal storage or the supplied seed script.
+public class NoSqlServerLock : DbCommandInterceptor {
+ public override ValueTask<InterceptionResult<int>> NonQueryExecutingAsync(DbCommand command,CommandEventData data,InterceptionResult<int> result,CancellationToken ct=default)=>new(command.CommandText.Contains("sp_getapplock")?InterceptionResult<int>.SuppressWithResult(0):result);
+}
+public class Runner { public static async Task Main() {
+var checks=0;void Check(bool valid,string name){if(!valid)throw new Exception("FAIL "+name);checks++;Console.WriteLine("PASS "+name);}
+var root=Path.GetFullPath(Environment.GetEnvironmentVariable("FALCON_PROJECT_ROOT") ?? "../output/FALCON_Website");using var connection=new SqliteConnection("DataSource=:memory:");connection.Open();
+using var factory=new WebApplicationFactory<global::Program>().WithWebHostBuilder(b=>{b.UseContentRoot(root);b.UseEnvironment("Development");b.ConfigureServices(s=>{s.RemoveAll<DbContextOptions<FalconDbContext>>();s.RemoveAll<FalconDbContext>();s.AddDbContext<FalconDbContext>(o=>o.UseSqlite(connection).AddInterceptors(new NoSqlServerLock()));});});
+using(var scope=factory.Services.CreateScope()){
+ var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();await db.Database.EnsureCreatedAsync();var h=scope.ServiceProvider.GetRequiredService<IPasswordHasher<AppUser>>();
+ db.Roles.AddRange(new AppRole{RoleId=1,RoleName="Admin"},new AppRole{RoleId=2,RoleName="Customer"});
+ foreach(var(id,name,role) in new[]{(1L,"qaadmin",1),(2L,"qaone",2),(3L,"qatwo",2)}){var u=new AppUser{UserId=id,Username=name,Email=name+"@example.invalid",RoleId=role,Status="ACTIVE"};u.PasswordHash=h.HashPassword(u,"QA-only-Temporary!39");db.Users.Add(u);}
+ db.Categories.Add(new Category{CategoryId=1,CategoryName="QA Honda",Slug="qa-honda",IsActive=true});
+ db.Products.Add(new Product{ProductId=1,CategoryId=1,ProductName="QA Vehicle",Slug="qa-vehicle",Price=30000000,Displacement=125,StockQuantity=4,Status="Active",CreatedAt=BusinessClock.Now});
+ db.Showrooms.Add(new Showroom{ShowroomId=1,ShowroomName="QA showroom",Address="QA address",IsActive=true});
+ db.Coupons.AddRange(new Coupon{CouponId=1,Code="QA10",DiscountType="Percentage",DiscountValue=10,MinOrderAmount=1,MaxDiscountAmount=2000000,UsageLimit=2,IsActive=true,StartDate=BusinessClock.Now.AddDays(-1),EndDate=BusinessClock.Now.AddDays(10),CreatedAt=BusinessClock.Now},new Coupon{CouponId=2,Code="QACASH",DiscountType="FixedAmount",DiscountValue=99999999,UsageLimit=20,IsActive=true,StartDate=BusinessClock.Now.AddDays(-1),EndDate=BusinessClock.Now.AddDays(10),CreatedAt=BusinessClock.Now});
+ await db.SaveChangesAsync();
+}
+using var client=factory.CreateClient(new(){AllowAutoRedirect=false});
+string Html(string h)=>WebUtility.HtmlDecode(h);
+async Task<(HttpResponseMessage,string)> Get(string p){var r=await client.GetAsync(p);var h=await r.Content.ReadAsStringAsync();Directory.CreateDirectory("rendered");File.WriteAllText("rendered/"+p.Replace('/','_').Replace('?','_').Replace('&','_')+".html",h);return(r,h);}
+string Input(string html,string name){var match=Regex.Matches(html,"<input[^>]+>").Select(m=>m.Value).FirstOrDefault(m=>Regex.IsMatch(m,"name=\""+Regex.Escape(name)+"\""));return match==null?"":Html(Regex.Match(match,"value=\"([^\"]*)\"").Groups[1].Value);}
+async Task<HttpResponseMessage> Post(string path,string form,Dictionary<string,string> data){var(_,html)=await Get(form);var token=Input(html,"__RequestVerificationToken");Check(token.Length>0,"CSRF token "+form);data["__RequestVerificationToken"]=token;return await client.PostAsync(path,new FormUrlEncodedContent(data));}
+async Task Login(string name){var r=await Post("/Account/Login","/Account/Login",new(){{"Username",name},{"Password","QA-only-Temporary!39"}});Check(r.StatusCode==HttpStatusCode.Redirect,"Login "+name);}
+async Task Logout(){var r=await Post("/Account/Logout","/Account/Profile",new());Check(r.StatusCode==HttpStatusCode.Redirect,"Logout");}
+foreach(var path in new[]{"/Admin","/Admin/Products","/Admin/Users","/Admin/NhaCungCap","/Admin/Coupons","/Admin/Orders","/Admin/Bookings","/Cart","/Checkout","/Booking/Create","/Orders"}){var(r,_)=await Get(path);Check(r.StatusCode==HttpStatusCode.Redirect&&r.Headers.Location!.ToString().Contains("Login"),"Guest protected "+path);}
+foreach(var path in new[]{"/","/Catalog","/Catalog/Details/1","/Account/Login","/Account/Register"}){var(r,html)=await Get(path);Check(r.IsSuccessStatusCode,"Guest renders "+path);Check(!html.Contains("href=\"/Admin"),"No guest admin link "+path);if(path=="/")Check(!Html(html).Contains("Đội ngũ thực hiện"),"Team section removed");}
+var(_,detail)=await Get("/Catalog/Details/1");Check(detail.Contains("data-login-required")&&Html(detail).Contains("Vui lòng đăng nhập để tiếp tục"),"Guest CTA modal markup");
+var noCsrf=await client.PostAsync("/Cart/Add",new FormUrlEncodedContent(new Dictionary<string,string>{{"id","1"}}));Check(!noCsrf.IsSuccessStatusCode,"Unauthenticated POST denied");
+var badreg=await Post("/Account/Register","/Account/Register",new(){{"Username","bad"},{"Email","bad@example.invalid"},{"Password","QA-only-Temporary!39"},{"ConfirmPassword","different"},{"FullName","Bad"}});Check(badreg.StatusCode==HttpStatusCode.OK,"Register mismatch rejected");
+var data=new Dictionary<string,string>{{"Username","qaregister"},{"Email","qaregister@example.invalid"},{"Password","QA-only-Temporary!39"},{"ConfirmPassword","QA-only-Temporary!39"},{"FullName","QA Registered"},{"Phone","0901234567"}};
+var forged=await Post("/Account/Register","/Account/Register",new(data){{"RoleId","1"}});Check(forged.StatusCode==HttpStatusCode.OK,"Public role spoof rejected");
+var reg=await Post("/Account/Register","/Account/Register",new(data));Check(reg.StatusCode==HttpStatusCode.Redirect,"Register relational user/profile transaction");
+var duplicate=await Post("/Account/Register","/Account/Register",new(data));Check(duplicate.StatusCode==HttpStatusCode.OK,"Duplicate register rejected");
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();var u=await db.Users.SingleAsync(u=>u.Username=="qaregister");Check(u.RoleId==2&&await db.CustomerProfiles.AnyAsync(p=>p.UserId==u.UserId),"Registered user Customer plus profile");Check(scope.ServiceProvider.GetRequiredService<IPasswordHasher<AppUser>>().VerifyHashedPassword(u,u.PasswordHash,"QA-only-Temporary!39")!=PasswordVerificationResult.Failed,"Identity hash verifies");}
+await Login("qaone");
+var(adminDenied,_)=await Get("/Admin/Coupons");Check(adminDenied.StatusCode==HttpStatusCode.Redirect&&adminDenied.Headers.Location!.ToString().Contains("Denied"),"Customer cannot access Admin");
+var(forbidden,_)=await Get("/Account/Denied");Check(forbidden.StatusCode==HttpStatusCode.Forbidden,"Denied page HTTP 403");
+var csrf=await client.PostAsync("/Cart/Add",new FormUrlEncodedContent(new Dictionary<string,string>{{"id","1"}}));Check(csrf.StatusCode==HttpStatusCode.BadRequest,"Authenticated POST requires CSRF");
+var add=await Post("/Cart/Add","/Cart/Add?id=1",new(){{"id","1"},{"quantity","1"}});Check(add.StatusCode==HttpStatusCode.Redirect,"Cart add");
+var(_,cartHtml)=await Get("/Cart");Check(cartHtml.Contains("QA Vehicle"),"Cart shows server product");
+var invalidQty=await Post("/Cart/Update","/Cart",new(){{"id","1"},{"quantity","999"}});Check(invalidQty.StatusCode==HttpStatusCode.Redirect,"Cart invalid quantity handled");
+var(_,checkout)=await Get("/Checkout");var token=Input(checkout,"Token");Check(token.Length>0,"Checkout idempotency token");
+var orderForm=new Dictionary<string,string>{{"Token",token},{"CustomerName","QA One"},{"CustomerPhone","0901234567"},{"CustomerEmail","qaone@example.invalid"},{"PaymentMethod","Showroom_Deposit"},{"CouponCode","QA10"},{"intent","preview"},{"UserId","3"},{"TotalAmount","1"}};
+var preview=await Post("/Checkout","/Checkout",new(orderForm));Check(preview.IsSuccessStatusCode,"Coupon preview");
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();Check((await db.Coupons.FindAsync(1))!.UsedCount==0&&await db.Orders.CountAsync()==0,"Preview has no writes");}
+orderForm["intent"]="place";var placed=await Post("/Checkout","/Checkout",new(orderForm));Check(placed.StatusCode==HttpStatusCode.Redirect&&placed.Headers.Location!.ToString().Contains("Orders/Details"),"Place relational order");
+long oid;
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();var o=await db.Orders.Include(o=>o.Details).SingleAsync();oid=o.OrderId;Check(o.UserId==2&&o.SubTotal==30000000&&o.DiscountAmount==2000000&&o.TotalAmount==28000000&&o.DepositAmount==2800000&&o.PaymentStatus=="Pending"&&o.OrderStatus=="Processing"&&o.Details.Count==1,"Server totals/ownership/status ignore forged values");Check((await db.Coupons.FindAsync(1))!.UsedCount==1,"Coupon used once after order commit");Check((await db.Products.FindAsync(1))!.StockQuantity==4,"No stock decrement before completion");}
+var replay=await Post("/Checkout","/Orders/Details/"+oid,new(orderForm));Check(replay.StatusCode==HttpStatusCode.Redirect,"Replay idempotent response");
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();Check(await db.Orders.CountAsync()==1&&(await db.Coupons.FindAsync(1))!.UsedCount==1,"Replay no duplicate order or coupon increment");}
+var bookingForm=new Dictionary<string,string>{{"CarId","1"},{"ShowroomId","1"},{"FullName","QA One"},{"PhoneNumber","0901234567"},{"Email","qaone@example.invalid"},{"DriverLicenseNumber","QA-TEST"},{"CustomerNotes","QA note"},{"AppointmentDate",BusinessClock.Now.Date.AddDays(1).ToString("yyyy-MM-dd")},{"AppointmentTimeSlot",BookingPolicy.Slots[0]},{"UserId","3"}};
+var booking=await Post("/Booking/Create","/Booking/Create",new(bookingForm));Check(booking.StatusCode==HttpStatusCode.Redirect,"Booking saved");
+long bid;
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();var b=await db.TestDriveBookings.SingleAsync();bid=b.BookingId;Check(b.UserId==2&&b.Status=="Pending"&&b.Email=="qaone@example.invalid"&&b.CustomerNotes=="QA note"&&b.DriverLicenseNumber=="QA-TEST","Booking full field mapping and ownership");}
+var bdup=await Post("/Booking/Create","/Booking/Create",new(bookingForm));Check(bdup.StatusCode==HttpStatusCode.OK,"Duplicate overlapping booking blocked");
+foreach(var path in new[]{"/Account/Profile","/Orders","/Orders/Details/"+oid,"/Booking","/Booking/Details/"+bid}){var(r,_)=await Get(path);Check(r.IsSuccessStatusCode,"Customer render "+path);}
+await Logout();await Login("qatwo");
+foreach(var path in new[]{"/Orders/Details/"+oid,"/Booking/Details/"+bid}){var(r,_)=await Get(path);Check(r.StatusCode==HttpStatusCode.NotFound,"Other customer cannot read "+path);}
+var cancelOther=await Post("/Orders/Cancel/"+oid,"/Account/Profile",new());Check(cancelOther.StatusCode==HttpStatusCode.NotFound,"Other customer cannot cancel order");
+var cancelBookingOther=await Post("/Booking/Cancel/"+bid,"/Account/Profile",new());Check(cancelBookingOther.StatusCode==HttpStatusCode.NotFound,"Other customer cannot cancel booking");
+var(_,emptycart)=await Get("/Cart");Check(!emptycart.Contains("QA Vehicle"),"Cart isolated after logout/user switch");
+await Logout();await Login("qaone");
+var cancelled=await Post("/Orders/Cancel/"+oid,"/Orders/Details/"+oid,new());Check(cancelled.StatusCode==HttpStatusCode.Redirect,"Owner cancels pending order");
+await Post("/Orders/Cancel/"+oid,"/Orders/Details/"+oid,new());
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();Check((await db.Coupons.FindAsync(1))!.UsedCount==0&&(await db.Orders.FindAsync(oid))!.OrderStatus=="Cancelled","Repeated cancel refunds coupon once");}
+await Logout();await Login("qaadmin");
+foreach(var path in new[]{"/Admin/Products","/Admin/Products/Create","/Admin/Products/Details/1","/Admin/Products/Edit/1","/Admin/Users","/Admin/Users/Create","/Admin/Users/Edit/2","/Admin/Users/Details/1","/Admin/NhaCungCap/Create","/Admin/Coupons","/Admin/Coupons/Create","/Admin/Coupons/Edit/1","/Admin/Coupons/Details/1","/Admin/Coupons/Delete/1","/Admin/Orders","/Admin/Orders/Details/"+oid,"/Admin/Bookings","/Admin/Bookings/Details/"+bid}){var(r,html)=await Get(path);Check(r.IsSuccessStatusCode,"Admin render "+path);if(path=="/Admin/Coupons")Check(html.Contains("data-modal-link")&&!html.Contains("localStorage"),"Coupon modal links and real data");}
+var(adminEdit,_)=await Get("/Admin/Users/Edit/1");Check(adminEdit.StatusCode==HttpStatusCode.Redirect&&adminEdit.Headers.Location!.ToString().Contains("Denied"),"Admin account protected from edit");
+var adminCreate=await Post("/Admin/Users/Create","/Admin/Users/Create",new(){{"Username","eviladmin"},{"Email","evil@example.invalid"},{"Password","QA-only-Temporary!39"},{"ConfirmPassword","QA-only-Temporary!39"},{"RoleId","1"}});Check(adminCreate.StatusCode==HttpStatusCode.OK,"Second Admin creation rejected");
+var promote=await Post("/Admin/Users/Edit/2","/Admin/Users/Edit/2",new(){{"UserId","2"},{"Email","qaone@example.invalid"},{"RoleId","1"},{"Status","ACTIVE"}});Check(promote.StatusCode==HttpStatusCode.OK,"Customer promotion rejected");
+var cp=new Dictionary<string,string>{{"Code","qa-new"},{"DiscountType","Percentage"},{"DiscountValue","15"},{"MinOrderAmount","0"},{"MaxDiscountAmount","500000"},{"StartDate",BusinessClock.Now.AddDays(-1).ToString("yyyy-MM-ddTHH:mm")},{"EndDate",BusinessClock.Now.AddDays(10).ToString("yyyy-MM-ddTHH:mm")},{"UsageLimit","10"},{"IsActive","true"},{"UsedCount","9"}};
+var created=await Post("/Admin/Coupons/Create","/Admin/Coupons/Create",new(cp));Check(created.StatusCode==HttpStatusCode.Redirect,"Coupon create");
+int cid;using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();var c=await db.Coupons.SingleAsync(c=>c.Code=="QA-NEW");cid=c.CouponId;Check(c.UsedCount==0,"Coupon uppercase and overposting protected");}
+var duplicateCoupon=await Post("/Admin/Coupons/Create","/Admin/Coupons/Create",new(cp));Check(duplicateCoupon.StatusCode==HttpStatusCode.OK,"Coupon duplicate rejected");
+var badcp=new Dictionary<string,string>(cp);badcp["Code"]="QA-BAD";badcp["DiscountValue"]="101";var invalid=await Post("/Admin/Coupons/Create","/Admin/Coupons/Create",badcp);Check(invalid.StatusCode==HttpStatusCode.OK,"Coupon percentage over 100 rejected");
+var(_,editHtml)=await Get("/Admin/Coupons/Edit/"+cid);var version=Input(editHtml,"Version");cp["Version"]=version;cp["Code"]="ATTACK";cp["DiscountValue"]="99";cp["Description"]="Updated";var edited=await Post("/Admin/Coupons/Edit/"+cid,"/Admin/Coupons/Edit/"+cid,new(cp));Check(edited.StatusCode==HttpStatusCode.Redirect,"Coupon edit");
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();var c=await db.Coupons.FindAsync(cid);Check(c!.Code=="QA-NEW"&&c.DiscountValue==15&&c.Description=="Updated","Coupon immutable fields protected");}
+var stale=await Post("/Admin/Coupons/Edit/"+cid,"/Admin/Coupons/Edit/"+cid,new(cp));Check(stale.StatusCode==HttpStatusCode.OK,"Stale coupon edit rejected");
+var(_,deleteUsed)=await Get("/Admin/Coupons/Delete/1");Check(Html(deleteUsed).Contains("không thể xóa"),"Coupon with cancelled order still protected");
+var protectedDelete=await Post("/Admin/Coupons/Delete/1","/Admin/Coupons/Delete/1",new(){{"version",Input(deleteUsed,"version")}});Check(protectedDelete.StatusCode==HttpStatusCode.Redirect,"Protected delete handled");
+var(_,del)=await Get("/Admin/Coupons/Delete/"+cid);var removed=await Post("/Admin/Coupons/Delete/"+cid,"/Admin/Coupons/Delete/"+cid,new(){{"version",Input(del,"version")}});Check(removed.StatusCode==HttpStatusCode.Redirect,"Unused coupon delete");
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();Check(await db.Coupons.FindAsync(cid)==null&&await db.Coupons.FindAsync(1)!=null,"Delete persistence and used coupon retained");}
+
+// Admin workflow fixture: existing products only, no production database touched.
+long flowId;using(var scope=factory.Services.CreateScope()){
+ var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();var order=new SalesOrder{OrderCode="QA-FLOW",UserId=2,CustomerName="QA",CustomerPhone="0901234567",CustomerEmail="qaone@example.invalid",SubTotal=30000000,TotalAmount=30000000,CreatedAt=BusinessClock.Now,Details=[new OrderDetail{CarId=1,CarName="QA Vehicle",Quantity=1,UnitPrice=30000000}]};db.Orders.Add(order);await db.SaveChangesAsync();flowId=order.OrderId;
+}
+foreach(var (from,to,pay) in new[]{("Processing","Confirmed","Pending"),("Confirmed","Delivering","Pending"),("Delivering","Completed","Paid")}){
+ var r=await Post("/Admin/Orders/Update/"+flowId,"/Admin/Orders/Details/"+flowId,new(){{"status",to},{"payment",pay},{"expected",from},{"expectedPayment","Pending"}});Check(r.StatusCode==HttpStatusCode.Redirect,"Admin order transition "+to);
+}
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();Check((await db.Orders.FindAsync(flowId))!.OrderStatus=="Completed"&&(await db.Products.FindAsync(1))!.StockQuantity==3,"Completed order decrements stock once");}
+await Post("/Admin/Orders/Update/"+flowId,"/Admin/Orders/Details/"+flowId,new(){{"status","Completed"},{"payment","Paid"},{"expected","Delivering"},{"expectedPayment","Pending"}});
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();Check((await db.Products.FindAsync(1))!.StockQuantity==3,"Repeated completion cannot double-decrement");}
+var approve=await Post("/Admin/Bookings/Update/"+bid,"/Admin/Bookings/Details/"+bid,new(){{"status","Confirmed"},{"expected","Pending"},{"notes","QA approved"}});Check(approve.StatusCode==HttpStatusCode.Redirect,"Admin confirms booking");
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();Check((await db.TestDriveBookings.FindAsync(bid))!.Status=="Confirmed","Booking confirmation persisted");}
+// TV1 update still works and stale stock form cannot restore sold inventory.
+var productForm=new Dictionary<string,string>{{"ProductId","1"},{"ProductName","QA Vehicle"},{"Slug","qa-vehicle"},{"CategoryId","1"},{"Price","30000000"},{"Displacement","125"},{"StockQuantity","4"},{"OriginalStockQuantity","4"},{"Status","Active"}};
+var staleStock=await Post("/Admin/Products/Edit/1","/Admin/Products/Edit/1",new(productForm));Check(staleStock.StatusCode==HttpStatusCode.OK,"TV1 stale stock edit blocked");
+productForm["OriginalStockQuantity"]="3";productForm["StockQuantity"]="3";var goodStock=await Post("/Admin/Products/Edit/1","/Admin/Products/Edit/1",new(productForm));Check(goodStock.StatusCode==HttpStatusCode.Redirect,"TV1 valid edit retained");
+await Logout();await Login("qaone");
+await Post("/Cart/Add","/Cart/Add?id=1",new(){{"id","1"},{"quantity","1"}});
+var(_,rollbackCheckout)=await Get("/Checkout");orderForm["Token"]=Input(rollbackCheckout,"Token");orderForm["CouponCode"]="QA10";
+// Fail the detail INSERT after the coupon and order writes: transaction must undo both.
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();await db.Database.ExecuteSqlRawAsync("CREATE TRIGGER qa_fail_detail BEFORE INSERT ON OrderDetails BEGIN SELECT RAISE(ABORT, 'QA injected detail failure'); END;");}
+var failedOrder=await Post("/Checkout","/Checkout",new(orderForm));Check(failedOrder.StatusCode==HttpStatusCode.OK,"Failed detail insert returns validation error");
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();Check(await db.Orders.CountAsync()==2&&(await db.Coupons.FindAsync(1))!.UsedCount==0,"Rollback removes partial order and restores coupon count");await db.Database.ExecuteSqlRawAsync("DROP TRIGGER qa_fail_detail");}
+var recovered=await Post("/Checkout","/Checkout",new(orderForm));Check(recovered.StatusCode==HttpStatusCode.Redirect,"Retry after rollback succeeds with same token");
+var cancelBooking=await Post("/Booking/Cancel/"+bid,"/Booking/Details/"+bid,new());Check(cancelBooking.StatusCode==HttpStatusCode.Redirect,"Owner cancels confirmed future booking");
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();Check((await db.TestDriveBookings.FindAsync(bid))!.Status=="Cancelled","Booking cancellation persisted");}
+// Verify supplied Identity V3 demo hashes using the application's hasher (no SQL Server required).
+var sql=File.ReadAllText(Path.Combine(root,"Database/FALCON_FullDatabase_DongBo_4TaiKhoan.sql"));
+var demos=Regex.Matches(sql,@"\(N'(falcon\.demo\.[^']+)',N'[^']+',N'([^']+)',N'(AQAAAA[^']+)'\)");Check(demos.Count==4,"Exactly four demo password records in supplied SQL appendix");
+foreach(Match demo in demos){var h=new PasswordHasher<AppUser>();Check(h.VerifyHashedPassword(new AppUser(),demo.Groups[3].Value,demo.Groups[2].Value)!=PasswordVerificationResult.Failed,"Supplied Identity V3 seed hash "+demo.Groups[1].Value);}
+// Pure rule boundaries independent of relational provider.
+var rule=new Coupon{IsActive=true,DiscountType="FixedAmount",DiscountValue=999,StartDate=BusinessClock.Now.AddDays(-1),EndDate=BusinessClock.Now.AddDays(1),UsageLimit=1};Check(CouponRules.Discount(rule,100,BusinessClock.Now)==100,"Discount capped at subtotal");
+rule.DiscountType="Percentage";rule.DiscountValue=10;rule.MaxDiscountAmount=0;Check(CouponRules.Discount(rule,100,BusinessClock.Now)==0,"Zero cap honored");
+foreach(var change in new Action<Coupon>[] {c=>c.IsActive=false,c=>c.StartDate=BusinessClock.Now.AddDays(1),c=>c.EndDate=BusinessClock.Now.AddDays(-1),c=>c.UsedCount=1,c=>c.MinOrderAmount=1000}){var c=new Coupon{IsActive=true,DiscountType="Percentage",DiscountValue=10,StartDate=BusinessClock.Now.AddDays(-1),EndDate=BusinessClock.Now.AddDays(1),UsageLimit=1};change(c);try{CouponRules.Discount(c,100,BusinessClock.Now);Check(false,"Invalid coupon accepted");}catch(BusinessException){Check(true,"Unavailable coupon/min order rejected");}}
+Check(BookingPolicy.Overlaps("09:00 - 10:30","10:00 - 11:00")&&!BookingPolicy.Overlaps("09:00 - 10:30","10:30 - 11:00"),"Booking overlap legacy/new slot boundaries");
+Console.WriteLine($"TOTAL {checks} checks passed. SQLite relational test fixture; SQL Server application locks suppressed, SQL Server itself NOT tested.");
+}}

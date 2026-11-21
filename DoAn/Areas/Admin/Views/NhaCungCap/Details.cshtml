@@ -1,0 +1,127 @@
+@model Falcon.Web.Models.NhaCungCap
+
+@{
+    ViewData["Title"] = "Chi tiết nhà cung cấp";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .supplier-detail-card {
+        background: #1e1e24;
+        border: 1px solid #38383f;
+        border-radius: 12px;
+        color: #f5f5f7;
+    }
+
+    .supplier-detail-card h3 {
+        color: #e5c158;
+    }
+
+    .detail-label {
+        color: #a7a7b0;
+        margin-bottom: 5px;
+    }
+
+    .detail-value {
+        color: #f5f5f7;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .detail-item {
+        padding: 15px;
+        background: #292930;
+        border-radius: 8px;
+        height: 100%;
+    }
+</style>
+
+<div class="supplier-detail-card p-4">
+
+    <h3 class="mb-2">
+        <i class="bi bi-building"></i>
+        Chi tiết nhà cung cấp
+    </h3>
+
+    <p class="text-secondary mb-4">
+        Thông tin chi tiết của nhà cung cấp trong hệ thống.
+    </p>
+
+    <div class="row g-3">
+
+        <div class="col-md-6">
+            <div class="detail-item">
+                <div class="detail-label">Mã nhà cung cấp</div>
+                <div class="detail-value">@Model.MaNhaCungCap</div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="detail-item">
+                <div class="detail-label">Tên nhà cung cấp</div>
+                <div class="detail-value">@Model.TenNhaCungCap</div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="detail-item">
+                <div class="detail-label">Số điện thoại</div>
+                <div class="detail-value">@Model.SoDienThoai</div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="detail-item">
+                <div class="detail-label">Email</div>
+                <div class="detail-value">@(Model.Email ?? "Chưa cập nhật")</div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="detail-item">
+                <div class="detail-label">Loại nhà cung cấp</div>
+                <div class="detail-value">@Model.LoaiNhaCungCap</div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="detail-item">
+                <div class="detail-label">Trạng thái</div>
+
+                @if (Model.DangHoatDong)
+                {
+                    <span class="badge bg-success">Đang hoạt động</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Ngừng hoạt động</span>
+                }
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="detail-item">
+                <div class="detail-label">Địa chỉ</div>
+                <div class="detail-value">@(Model.DiaChi ?? "Chưa cập nhật")</div>
+            </div>
+        </div>
+
+    </div>
+
+    <hr class="border-secondary my-4" />
+
+    <div class="d-flex gap-2">
+        <a asp-action="Edit"
+           asp-route-id="@Model.MaNhaCungCap"
+           class="btn btn-warning">
+            Sửa
+            Chỉnh sửa
+        </a>
+
+        <a asp-action="Index" class="btn btn-outline-light">
+            <i class="bi bi-arrow-left"></i>
+            Quay lại danh sách
+        </a>
+    </div>
+
+</div>

@@ -1,0 +1,699 @@
+[
+  {
+    "file": "Program.cs",
+    "sources": [
+      "TV1:Program.cs",
+      "TV3:Program.cs",
+      "TV4:Program.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Services/NhaCungCapService.cs",
+    "sources": [
+      "TV4:Services/NhaCungCapService.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Services/AdminBootstrap.cs",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Services/DashboardService.cs",
+    "sources": [
+      "TV1:Services/DashboardService.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Controllers/AccountController.cs",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Controllers/HomeController.cs",
+    "sources": [
+      "TV1:Controllers/HomeController.cs",
+      "TV3:Controllers/HomeController.cs",
+      "TV4:Controllers/HomeController.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Controllers/CatalogController.cs",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Views/_ViewStart.cshtml",
+    "sources": [
+      "TV1:Views/_ViewStart.cshtml",
+      "TV3:Views/_ViewStart.cshtml",
+      "TV4:Views/_ViewStart.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Views/_ViewImports.cshtml",
+    "sources": [
+      "TV1:Views/_ViewImports.cshtml",
+      "TV3:Views/_ViewImports.cshtml",
+      "TV4:Views/_ViewImports.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "TagHelpers/ProductImageTagHelper.cs",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Models/NhaCungCap.cs",
+    "sources": [
+      "TV4:Models/NhaCungCap.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Models/LoginVm.cs",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Models/UserViewModels.cs",
+    "sources": [
+      "TV3:Models/UserViewModels.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Models/CatalogVm.cs",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Models/AppUser.cs",
+    "sources": [
+      "TV3:Models/AppUser.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Data/FalconDbContext.cs",
+    "sources": [
+      "TV1:Data/MotorcycleDbContext.cs",
+      "TV3:Data/FalconDbContext.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/js/integrated.js",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "wwwroot/js/site.js",
+    "sources": [
+      "TV1:wwwroot/js/site.js",
+      "TV3:wwwroot/js/site.js",
+      "TV4:wwwroot/js/site.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/css/site.css",
+    "sources": [
+      "TV1:wwwroot/css/site.css",
+      "TV3:wwwroot/css/site.css",
+      "TV4:wwwroot/css/site.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/css/integrated.css",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "wwwroot/assets/catalog.css",
+    "sources": [
+      "TV3:wwwroot/assets/catalog.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/assets/bootstrap.bundle.min.js",
+    "sources": [
+      "TV3:wwwroot/assets/bootstrap.bundle.min.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/assets/bootstrap.min.css",
+    "sources": [
+      "TV3:wwwroot/assets/bootstrap.min.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "sources": [
+      "TV3:wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+      "TV4:wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js",
+    "sources": [
+      "TV3:wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js",
+      "TV4:wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/jquery-validation/dist/jquery.validate.js",
+    "sources": [
+      "TV1:wwwroot/lib/jquery-validation/dist/jquery.validate.js",
+      "TV3:wwwroot/lib/jquery-validation/dist/jquery.validate.js",
+      "TV4:wwwroot/lib/jquery-validation/dist/jquery.validate.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/jquery-validation/dist/jquery.validate.min.js",
+    "sources": [
+      "TV1:wwwroot/lib/jquery-validation/dist/jquery.validate.min.js",
+      "TV3:wwwroot/lib/jquery-validation/dist/jquery.validate.min.js",
+      "TV4:wwwroot/lib/jquery-validation/dist/jquery.validate.min.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/jquery-validation/dist/additional-methods.js",
+    "sources": [
+      "TV1:wwwroot/lib/jquery-validation/dist/additional-methods.js",
+      "TV3:wwwroot/lib/jquery-validation/dist/additional-methods.js",
+      "TV4:wwwroot/lib/jquery-validation/dist/additional-methods.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/jquery-validation/dist/additional-methods.min.js",
+    "sources": [
+      "TV1:wwwroot/lib/jquery-validation/dist/additional-methods.min.js",
+      "TV3:wwwroot/lib/jquery-validation/dist/additional-methods.min.js",
+      "TV4:wwwroot/lib/jquery-validation/dist/additional-methods.min.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/jquery/dist/jquery.js",
+    "sources": [
+      "TV1:wwwroot/lib/jquery/dist/jquery.js",
+      "TV3:wwwroot/lib/jquery/dist/jquery.js",
+      "TV4:wwwroot/lib/jquery/dist/jquery.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/jquery/dist/jquery.min.js",
+    "sources": [
+      "TV1:wwwroot/lib/jquery/dist/jquery.min.js",
+      "TV3:wwwroot/lib/jquery/dist/jquery.min.js",
+      "TV4:wwwroot/lib/jquery/dist/jquery.min.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/js/bootstrap.js",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/js/bootstrap.js",
+      "TV3:wwwroot/lib/bootstrap/dist/js/bootstrap.js",
+      "TV4:wwwroot/lib/bootstrap/dist/js/bootstrap.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js",
+      "TV3:wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js",
+      "TV4:wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/js/bootstrap.esm.js",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/js/bootstrap.esm.js",
+      "TV3:wwwroot/lib/bootstrap/dist/js/bootstrap.esm.js",
+      "TV4:wwwroot/lib/bootstrap/dist/js/bootstrap.esm.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/js/bootstrap.min.js",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/js/bootstrap.min.js",
+      "TV3:wwwroot/lib/bootstrap/dist/js/bootstrap.min.js",
+      "TV4:wwwroot/lib/bootstrap/dist/js/bootstrap.min.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+      "TV3:wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+      "TV4:wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js",
+      "TV3:wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js",
+      "TV4:wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap.min.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap.min.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap.min.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap.min.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.min.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.min.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.min.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.min.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.min.css",
+    "sources": [
+      "TV1:wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.min.css",
+      "TV3:wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.min.css",
+      "TV4:wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.min.css"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "ViewModels/Admin/ProductViewModels.cs",
+    "sources": [
+      "TV1:Areas/Admin/Models/ProductViewModels.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "ViewModels/Admin/ErrorViewModel.cs",
+    "sources": [
+      "TV1:Areas/Admin/Models/ErrorViewModel.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Views/Account/Denied.cshtml",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Views/Account/Login.cshtml",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Views/Shared/_ProductCard.cshtml",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Views/Shared/_Layout.cshtml",
+    "sources": [
+      "TV1:Views/Shared/_Layout.cshtml",
+      "TV3:Views/Shared/_Layout.cshtml",
+      "TV4:Views/Shared/_Layout.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Views/Shared/_ValidationScriptsPartial.cshtml",
+    "sources": [
+      "TV1:Views/Shared/_ValidationScriptsPartial.cshtml",
+      "TV3:Views/Shared/_ValidationScriptsPartial.cshtml",
+      "TV4:Views/Shared/_ValidationScriptsPartial.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Views/Home/Pending.cshtml",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Views/Home/Index.cshtml",
+    "sources": [
+      "TV3:Views/Home/Index.cshtml",
+      "TV4:Views/Home/Index.cshtml",
+      "Frontend: index/catalog/detail.html + assets/catalog.js (UI reimplemented as Razor/EF)"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Views/Home/Error.cshtml",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Views/Catalog/Index.cshtml",
+    "sources": [
+      "Frontend: index/catalog/detail.html + assets/catalog.js (UI reimplemented as Razor/EF)"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Views/Catalog/Details.cshtml",
+    "sources": [
+      "Frontend: index/catalog/detail.html + assets/catalog.js (UI reimplemented as Razor/EF)"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Models/Admin/ProductImage.cs",
+    "sources": [
+      "TV1:Areas/Admin/Models/ProductImage.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Models/Admin/Product.cs",
+    "sources": [
+      "TV1:Areas/Admin/Models/Product.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Models/Admin/Category.cs",
+    "sources": [
+      "TV1:Areas/Admin/Models/Category.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Controllers/HomeController.cs",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Areas/Admin/Controllers/NhaCungCapController.cs",
+    "sources": [
+      "TV4:Areas/Admin/Controllers/NhaCungCapController.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Controllers/UsersController.cs",
+    "sources": [
+      "TV3:Areas/Admin/Controllers/UsersController.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Controllers/ProductsController.cs",
+    "sources": [
+      "TV1:Areas/Admin/Controllers/ProductController.cs"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Controllers/CouponsController.cs",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Areas/Admin/Views/_ViewStart.cshtml",
+    "sources": [
+      "TV3:Areas/Admin/Views/_ViewStart.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/_ViewImports.cshtml",
+    "sources": [
+      "TV1:Areas/Admin/Views/_ViewImports.cshtml",
+      "TV3:Areas/Admin/Views/_ViewImports.cshtml",
+      "TV4:Areas/Admin/Views/_ViewImports.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/NhaCungCap/Index.cshtml",
+    "sources": [
+      "TV4:Areas/Admin/Views/NhaCungCap/Index.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/NhaCungCap/Create.cshtml",
+    "sources": [
+      "TV4:Areas/Admin/Views/NhaCungCap/Create.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/NhaCungCap/Details.cshtml",
+    "sources": [
+      "TV4:Areas/Admin/Views/NhaCungCap/Details.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/NhaCungCap/Edit.cshtml",
+    "sources": [
+      "TV4:Areas/Admin/Views/NhaCungCap/Edit.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/Shared/_LayoutAdmin.cshtml",
+    "sources": [
+      "TV1:Areas/Admin/Views/Shared/_LayoutAdmin.cshtml",
+      "TV4:Areas/Admin/Views/Shared/_LayoutAdmin.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/Users/Delete.cshtml",
+    "sources": [
+      "TV3:Areas/Admin/Views/Users/Delete.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/Users/Index.cshtml",
+    "sources": [
+      "TV3:Areas/Admin/Views/Users/Index.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/Users/Create.cshtml",
+    "sources": [
+      "TV3:Areas/Admin/Views/Users/Create.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/Users/Details.cshtml",
+    "sources": [
+      "TV3:Areas/Admin/Views/Users/Details.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/Users/Edit.cshtml",
+    "sources": [
+      "TV3:Areas/Admin/Views/Users/Edit.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/Home/Index.cshtml",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Areas/Admin/Views/Coupons/Index.cshtml",
+    "sources": [],
+    "decision": "new integration"
+  },
+  {
+    "file": "Areas/Admin/Views/Products/Delete.cshtml",
+    "sources": [
+      "TV1:Areas/Admin/Views/Products/Delete.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/Products/Index.cshtml",
+    "sources": [
+      "TV1:Areas/Admin/Views/Products/Index.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/Products/_Form.cshtml",
+    "sources": [
+      "TV1:Areas/Admin/Views/Products/_Form.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/Products/Create.cshtml",
+    "sources": [
+      "TV1:Areas/Admin/Views/Products/Create.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/Products/Details.cshtml",
+    "sources": [
+      "TV1:Areas/Admin/Views/Products/Details.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  },
+  {
+    "file": "Areas/Admin/Views/Products/Edit.cshtml",
+    "sources": [
+      "TV1:Areas/Admin/Views/Products/Edit.cshtml"
+    ],
+    "decision": "reuse/adapt/unify"
+  }
+]

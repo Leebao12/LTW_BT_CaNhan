@@ -1,0 +1,176 @@
+ASP.NET TestServer + SQLite :memory:; SQL Server applock suppressed in test fixture. No production database connected.
+
+PASS Guest protected /Admin
+PASS Guest protected /Admin/Products
+PASS Guest protected /Admin/Users
+PASS Guest protected /Admin/NhaCungCap
+PASS Guest protected /Admin/Coupons
+PASS Guest protected /Admin/Orders
+PASS Guest protected /Admin/Bookings
+PASS Guest protected /Cart
+PASS Guest protected /Checkout
+PASS Guest protected /Booking/Create
+PASS Guest protected /Orders
+PASS Guest renders /
+PASS No guest admin link /
+PASS Team section removed
+PASS Guest renders /Catalog
+PASS No guest admin link /Catalog
+PASS Guest renders /Catalog/Details/1
+PASS No guest admin link /Catalog/Details/1
+PASS Guest renders /Account/Login
+PASS No guest admin link /Account/Login
+PASS Guest renders /Account/Register
+PASS No guest admin link /Account/Register
+PASS Guest CTA modal markup
+PASS Unauthenticated POST denied
+PASS CSRF token /Account/Register
+PASS Register mismatch rejected
+PASS CSRF token /Account/Register
+PASS Public role spoof rejected
+PASS CSRF token /Account/Register
+PASS Register relational user/profile transaction
+PASS CSRF token /Account/Register
+PASS Duplicate register rejected
+PASS Registered user Customer plus profile
+PASS Identity hash verifies
+PASS CSRF token /Account/Login
+PASS Login qaone
+PASS Customer cannot access Admin
+PASS Denied page HTTP 403
+PASS Authenticated POST requires CSRF
+PASS CSRF token /Cart/Add?id=1
+PASS Cart add
+PASS Cart shows server product
+PASS CSRF token /Cart
+PASS Cart invalid quantity handled
+PASS Checkout idempotency token
+PASS CSRF token /Checkout
+PASS Coupon preview
+PASS Preview has no writes
+PASS CSRF token /Checkout
+PASS Place relational order
+PASS Server totals/ownership/status ignore forged values
+PASS Coupon used once after order commit
+PASS No stock decrement before completion
+PASS CSRF token /Orders/Details/1
+PASS Replay idempotent response
+PASS Replay no duplicate order or coupon increment
+PASS CSRF token /Booking/Create
+PASS Booking saved
+PASS Booking full field mapping and ownership
+PASS CSRF token /Booking/Create
+PASS Duplicate overlapping booking blocked
+PASS Customer render /Account/Profile
+PASS Customer render /Orders
+PASS Customer render /Orders/Details/1
+PASS Customer render /Booking
+PASS Customer render /Booking/Details/1
+PASS CSRF token /Account/Profile
+PASS Logout
+PASS CSRF token /Account/Login
+PASS Login qatwo
+PASS Other customer cannot read /Orders/Details/1
+PASS Other customer cannot read /Booking/Details/1
+PASS CSRF token /Account/Profile
+PASS Other customer cannot cancel order
+PASS CSRF token /Account/Profile
+PASS Other customer cannot cancel booking
+PASS Cart isolated after logout/user switch
+PASS CSRF token /Account/Profile
+PASS Logout
+PASS CSRF token /Account/Login
+PASS Login qaone
+PASS CSRF token /Orders/Details/1
+PASS Owner cancels pending order
+PASS CSRF token /Orders/Details/1
+PASS Repeated cancel refunds coupon once
+PASS CSRF token /Account/Profile
+PASS Logout
+PASS CSRF token /Account/Login
+PASS Login qaadmin
+PASS Admin render /Admin/Products
+PASS Admin render /Admin/Products/Create
+PASS Admin render /Admin/Products/Details/1
+PASS Admin render /Admin/Products/Edit/1
+PASS Admin render /Admin/Users
+PASS Admin render /Admin/Users/Create
+PASS Admin render /Admin/Users/Edit/2
+PASS Admin render /Admin/Users/Details/1
+PASS Admin render /Admin/NhaCungCap/Create
+PASS Admin render /Admin/Coupons
+PASS Coupon modal links and real data
+PASS Admin render /Admin/Coupons/Create
+PASS Admin render /Admin/Coupons/Edit/1
+PASS Admin render /Admin/Coupons/Details/1
+PASS Admin render /Admin/Coupons/Delete/1
+PASS Admin render /Admin/Orders
+PASS Admin render /Admin/Orders/Details/1
+PASS Admin render /Admin/Bookings
+PASS Admin render /Admin/Bookings/Details/1
+PASS Admin account protected from edit
+PASS CSRF token /Admin/Users/Create
+PASS Second Admin creation rejected
+PASS CSRF token /Admin/Users/Edit/2
+PASS Customer promotion rejected
+PASS CSRF token /Admin/Coupons/Create
+PASS Coupon create
+PASS Coupon uppercase and overposting protected
+PASS CSRF token /Admin/Coupons/Create
+PASS Coupon duplicate rejected
+PASS CSRF token /Admin/Coupons/Create
+PASS Coupon percentage over 100 rejected
+PASS CSRF token /Admin/Coupons/Edit/3
+PASS Coupon edit
+PASS Coupon immutable fields protected
+PASS CSRF token /Admin/Coupons/Edit/3
+PASS Stale coupon edit rejected
+PASS Coupon with cancelled order still protected
+PASS CSRF token /Admin/Coupons/Delete/1
+PASS Protected delete handled
+PASS CSRF token /Admin/Coupons/Delete/3
+PASS Unused coupon delete
+PASS Delete persistence and used coupon retained
+PASS CSRF token /Admin/Orders/Details/2
+PASS Admin order transition Confirmed
+PASS CSRF token /Admin/Orders/Details/2
+PASS Admin order transition Delivering
+PASS CSRF token /Admin/Orders/Details/2
+PASS Admin order transition Completed
+PASS Completed order decrements stock once
+PASS CSRF token /Admin/Orders/Details/2
+PASS Repeated completion cannot double-decrement
+PASS CSRF token /Admin/Bookings/Details/1
+PASS Admin confirms booking
+PASS Booking confirmation persisted
+PASS CSRF token /Admin/Products/Edit/1
+PASS TV1 stale stock edit blocked
+PASS CSRF token /Admin/Products/Edit/1
+PASS TV1 valid edit retained
+PASS CSRF token /Account/Profile
+PASS Logout
+PASS CSRF token /Account/Login
+PASS Login qaone
+PASS CSRF token /Cart/Add?id=1
+PASS CSRF token /Checkout
+PASS Failed detail insert returns validation error
+PASS Rollback removes partial order and restores coupon count
+PASS CSRF token /Checkout
+PASS Retry after rollback succeeds with same token
+PASS CSRF token /Booking/Details/1
+PASS Owner cancels confirmed future booking
+PASS Booking cancellation persisted
+PASS Exactly four demo password records in supplied SQL appendix
+PASS Supplied Identity V3 seed hash falcon.demo.admin
+PASS Supplied Identity V3 seed hash falcon.demo.kh01
+PASS Supplied Identity V3 seed hash falcon.demo.kh02
+PASS Supplied Identity V3 seed hash falcon.demo.kh03
+PASS Discount capped at subtotal
+PASS Zero cap honored
+PASS Unavailable coupon/min order rejected
+PASS Unavailable coupon/min order rejected
+PASS Unavailable coupon/min order rejected
+PASS Unavailable coupon/min order rejected
+PASS Unavailable coupon/min order rejected
+PASS Booking overlap legacy/new slot boundaries
+TOTAL 173 checks passed. SQLite relational test fixture; SQL Server application locks suppressed, SQL Server itself NOT tested.

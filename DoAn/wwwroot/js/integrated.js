@@ -1,0 +1,2 @@
+document.addEventListener('error',e=>{if(e.target instanceof HTMLImageElement){const p=document.createElement('span');p.className='image-fallback d-block';p.textContent='Ảnh chưa được cung cấp';e.target.replaceWith(p);}},true);
+document.querySelectorAll('[data-gallery-src]').forEach(b=>b.addEventListener('click',()=>{const img=document.querySelector('#main-photo');if(img)img.src=b.querySelector("img")?.getAttribute("src") || "/images/missing.svg";}));

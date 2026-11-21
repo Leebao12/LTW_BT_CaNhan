@@ -1,0 +1,115 @@
+@model Falcon.Web.Models.UserDeleteVm
+
+@{
+    ViewData["Title"] = "Xóa hoặc khóa tài khoản";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+
+        <div class="filter-panel">
+
+            <p class="eyebrow">
+                FALCON / ACCOUNT MANAGEMENT
+            </p>
+
+            <h2 class="admin-title mb-3">
+                Xác nhận thao tác
+            </h2>
+
+            <p class="muted">
+                Vui lòng kiểm tra thông tin tài khoản
+                trước khi tiếp tục.
+            </p>
+
+            <div class="admin-panel mb-4">
+
+                <div class="mb-3">
+                    <p class="muted small mb-1">
+                        Mã tài khoản
+                    </p>
+                    <h5>#@Model.UserId</h5>
+                </div>
+
+                <div class="mb-3">
+                    <p class="muted small mb-1">
+                        Tên đăng nhập
+                    </p>
+                    <h5>@Model.Username</h5>
+                </div>
+
+                <div class="mb-3">
+                    <p class="muted small mb-1">
+                        Email
+                    </p>
+                    <h5 class="text-break">
+                        @Model.Email
+                    </h5>
+                </div>
+
+                <div>
+                    <p class="muted small mb-1">
+                        Trạng thái
+                    </p>
+                    <span class="badge bg-secondary">
+                        @Model.Status
+                    </span>
+                </div>
+
+            </div>
+
+            @if (Model.HasRelatedData)
+            {
+                <div class="alert alert-warning">
+                    <strong>Không thể xóa trực tiếp.</strong>
+
+                    <p class="mb-0 mt-2">
+                        Tài khoản đã có hồ sơ khách hàng,
+                        đơn hàng hoặc lịch lái thử.
+
+                        Hệ thống sẽ giữ lại dữ liệu và chuyển
+                        trạng thái tài khoản sang LOCKED.
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    <strong>Xác nhận xóa tài khoản?</strong>
+
+                    <p class="mb-0 mt-2">
+                        Tài khoản chưa có dữ liệu liên quan.
+                        Sau khi xóa, không thể khôi phục
+                        tài khoản bằng giao diện này.
+                    </p>
+                </div>
+            }
+
+            <form asp-area="Admin"
+                  asp-controller="Users"
+                  asp-action="Delete"
+                  asp-route-id="@Model.UserId"
+                  method="post">
+
+                <div class="d-flex flex-wrap gap-3 mt-4">
+
+                    <button type="submit"
+                            class="btn btn-danger">
+
+                        @(Model.HasRelatedData
+                                                ? "Xác nhận khóa tài khoản"
+                                                : "Xác nhận xóa tài khoản")
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn fc-outline">
+                        Hủy thao tác
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

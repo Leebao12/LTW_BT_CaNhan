@@ -1,0 +1,3 @@
+@model SalesOrder
+@{ViewData["Title"]="Chi tiết đơn hàng";}
+<section class="container section"><partial name="_OrderDetail"/>@if(Model.OrderStatus=="Processing"&&Model.PaymentStatus=="Pending"){<form asp-action="Cancel" asp-route-id="@Model.OrderId" method="post" class="mt-4" data-confirm="Bạn chắc chắn muốn hủy đơn hàng này?"><button class="btn btn-outline-danger">Hủy đơn hàng</button></form>}<a asp-action="Index" class="btn fc-outline mt-3">← Đơn hàng của tôi</a></section>

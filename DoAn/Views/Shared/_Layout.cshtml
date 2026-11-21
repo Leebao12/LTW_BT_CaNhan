@@ -1,0 +1,14 @@
+<!doctype html><html lang="vi" data-bs-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>@ViewData["Title"] | FALCON</title><link rel="stylesheet" href="~/assets/bootstrap.min.css"><link rel="stylesheet" href="~/assets/catalog.css"><link rel="stylesheet" href="~/css/integrated.css">@await RenderSectionAsync("Styles",false)</head><body>
+<nav class="navbar navbar-expand-xl navbar-dark fc-nav sticky-top"><div class="container py-2"><a class="navbar-brand brand" href="/">FALCON<span class="d-block" style="font-size:8px;letter-spacing:4px">MOTORCYCLES</span></a><button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu" aria-label="Mở menu" aria-expanded="false"><span class="navbar-toggler-icon"></span></button><div class="collapse navbar-collapse" id="menu"><div class="navbar-nav me-auto gap-xl-2"><a class="nav-link" href="/">Trang chủ</a><a class="nav-link" href="/Catalog">Khám phá xe</a>
+@if(!User.IsInRole("Admin")){<a class="nav-link" href="/Booking/Create">Đăng ký lái thử</a>}
+</div><div class="d-flex flex-wrap align-items-center gap-2">
+@if(User.Identity?.IsAuthenticated==true){
+ <a class="nav-link" href="/Account/Profile">@User.Identity.Name</a>
+ @if(User.IsInRole("Admin")){<a class="btn fc-btn" href="/Admin">Quản trị ↗</a>}
+ @if(User.IsInRole("Customer")){<a class="nav-link" href="/Orders">Đơn hàng</a><a class="nav-link" href="/Booking">Lịch hẹn</a><a class="btn fc-btn" href="/Cart">Giỏ hàng ↗</a>}
+ <form asp-area="" asp-controller="Account" asp-action="Logout" method="post"><button class="btn fc-outline">Đăng xuất</button></form>
+}else{<a class="btn fc-outline" href="/Account/Login">Đăng nhập</a>}
+</div></div></div></nav><main><div class="container pt-3"><partial name="_Flash"/></div>@RenderBody()</main>
+<footer><div class="container"><div class="row gy-4"><div class="col-md-6"><a class="brand fs-3" href="/">FALCON</a><p class="muted mt-3">Chọn chiếc xe. Viết hành trình của bạn.</p></div><div class="col-md-3"><h6>Khám phá</h6><a href="/Catalog">Bộ sưu tập xe</a><br><a href="/Booking/Create">Đăng ký lái thử</a></div><div class="col-md-3"><h6>Hỗ trợ khách hàng</h6><a href="/Orders">Đơn hàng của tôi</a><br><a href="/Booking">Lịch lái thử của tôi</a></div></div><div class="border-top border-secondary mt-4 pt-3 small muted">© @DateTime.Now.Year FALCON Motorcycles</div></div></footer>
+@if(User.Identity?.IsAuthenticated!=true){<partial name="_LoginPrompt"/>}
+<script src="~/assets/bootstrap.bundle.min.js"></script><script src="~/lib/jquery/dist/jquery.min.js"></script><script src="~/js/integrated.js"></script><script src="~/js/commerce.js"></script>@await RenderSectionAsync("Scripts",false)</body></html>

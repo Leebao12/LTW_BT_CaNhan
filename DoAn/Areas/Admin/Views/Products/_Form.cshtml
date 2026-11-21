@@ -1,0 +1,88 @@
+@model Falcon.Web.Models.Admin.ProductFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+<input asp-for="OriginalStockQuantity" type="hidden"/>
+<h5 class="text-warning mb-3">Thông tin sản phẩm</h5>
+<div class="row g-3">
+    <div class="col-md-8">
+        <label asp-for="ProductName" class="form-label"></label>
+        <input asp-for="ProductName" class="form-control" placeholder="Ví dụ: Honda Winner X 150" />
+        <span asp-validation-for="ProductName" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="CategoryId" class="form-label"></label>
+        <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select">
+            <option value="0">-- Chọn hãng xe --</option>
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger small"></span>
+    </div>
+    <div class="col-md-12">
+        <label asp-for="Slug" class="form-label"></label>
+        <input asp-for="Slug" class="form-control" placeholder="honda-winner-x-150" />
+        <span asp-validation-for="Slug" class="text-danger small"></span>
+        <small class="text-muted">Slug phải viết thường, không dấu, dùng dấu gạch ngang.</small>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" type="number" min="0" step="0.01" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Displacement" class="form-label"></label>
+        <input asp-for="Displacement" type="number" min="1" class="form-control" />
+        <span asp-validation-for="Displacement" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="StockQuantity" class="form-label"></label>
+        <input asp-for="StockQuantity" type="number" min="0" class="form-control" />
+        <span asp-validation-for="StockQuantity" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="EngineType" class="form-label"></label>
+        <input asp-for="EngineType" class="form-control" />
+        <span asp-validation-for="EngineType" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="FuelCapacity" class="form-label"></label>
+        <input asp-for="FuelCapacity" type="number" min="0.01" max="99.99" step="0.01" class="form-control" />
+        <span asp-validation-for="FuelCapacity" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="ColorOptions" class="form-label"></label>
+        <input asp-for="ColorOptions" class="form-control" placeholder="Đỏ, đen, trắng..." />
+        <span asp-validation-for="ColorOptions" class="text-danger small"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" rows="4" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="ImageFile" class="form-label"></label>
+        <input asp-for="ImageFile" type="file" accept=".jpg,.jpeg,.png,.webp" class="form-control" />
+        <span asp-validation-for="ImageFile" class="text-danger small"></span>
+        <small class="text-muted">Tối đa 5MB; JPG, PNG hoặc WEBP.</small>
+    </div>
+    <div class="col-md-6">
+        @if (!string.IsNullOrWhiteSpace(Model.PrimaryImageUrl))
+        {
+            <label class="form-label">Ảnh hiện tại</label>
+            <div><img src="@Model.PrimaryImageUrl" alt="Ảnh xe"
+                      style="max-width:180px;max-height:130px;object-fit:contain;background:white;border-radius:8px" /></div>
+        }
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-select">
+            <option value="Active">Đang kinh doanh</option>
+            <option value="Discontinued">Ngừng kinh doanh</option>
+        </select>
+        <span asp-validation-for="Status" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6 d-flex align-items-center">
+        <div class="form-check form-switch mt-3">
+            <input asp-for="IsFeatured" class="form-check-input" />
+            <label asp-for="IsFeatured" class="form-check-label"></label>
+        </div>
+    </div>
+</div>

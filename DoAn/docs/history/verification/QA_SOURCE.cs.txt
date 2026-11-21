@@ -1,0 +1,63 @@
+using System.Net;
+using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations;
+using Falcon.Web.Data;
+using Falcon.Web.Models;
+using Falcon.Web.Models.Admin;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+namespace Qa;
+public class Runner { public static async Task Main() {
+var checks=0;
+void Check(bool valid,string name){if(!valid)throw new Exception("FAIL "+name);checks++;Console.WriteLine("PASS "+name);}
+using var factory=new WebApplicationFactory<global::Program>().WithWebHostBuilder(b=>{b.UseContentRoot(Environment.GetEnvironmentVariable("FALCON_PROJECT_ROOT")!);b.UseEnvironment("Development");b.ConfigureServices(s=>{s.RemoveAll<DbContextOptions<FalconDbContext>>();s.RemoveAll<FalconDbContext>();s.AddDbContext<FalconDbContext>(o=>o.UseInMemoryDatabase("qa"));});});
+using(var scope=factory.Services.CreateScope()){
+ var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();var h=scope.ServiceProvider.GetRequiredService<IPasswordHasher<AppUser>>();
+ db.Roles.AddRange(new AppRole{RoleId=1,RoleName="Admin"},new AppRole{RoleId=2,RoleName="Customer"});
+ foreach(var(id,name,role,status) in new[]{(1L,"qaadmin",1,"ACTIVE"),(2L,"qacustomer",2,"ACTIVE"),(3L,"qalocked",1,"LOCKED")}){var u=new AppUser{UserId=id,Username=name,Email=name+"@example.invalid",RoleId=role,Status=status};u.PasswordHash=h.HashPassword(u,"QA-only-Temporary!39");db.Users.Add(u);}
+ db.Categories.Add(new Category{CategoryId=1,CategoryName="QA Honda",Slug="qa-honda",IsActive=true});
+ db.Products.Add(new Product{ProductId=1,CategoryId=1,ProductName="QA Vehicle",Slug="qa-vehicle",Price=30000000,Displacement=125,StockQuantity=4,Status="Active",CreatedAt=DateTime.UtcNow,Images=new(){new ProductImage{ImageId=1,ImageUrl="/uploads/products/sh125-main.jpg",IsPrimary=true}}});await db.SaveChangesAsync();
+}
+using var client=factory.CreateClient(new(){AllowAutoRedirect=false});
+async Task<(HttpResponseMessage,string)> Get(string p){var r=await client.GetAsync(p);return(r,await r.Content.ReadAsStringAsync());}
+async Task<HttpResponseMessage> Post(string path,string form,Dictionary<string,string> data){var(_,html)=await Get(form);var token=Regex.Match(html,"name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"").Groups[1].Value;Check(token.Length>0,"Antiforgery "+form);data["__RequestVerificationToken"]=WebUtility.HtmlDecode(token);return await client.PostAsync(path,new FormUrlEncodedContent(data));}
+foreach(var p in new[]{"/Admin","/Admin/Products","/Admin/Users","/Admin/NhaCungCap","/Admin/Coupons"}){var(r,_)=await Get(p);Check(r.StatusCode==HttpStatusCode.Redirect&&r.Headers.Location!.ToString().Contains("Login"),"Anonymous denied "+p);}
+var noCsrf=await client.PostAsync("/Account/Login",new FormUrlEncodedContent(new Dictionary<string,string>()));Check(noCsrf.StatusCode==HttpStatusCode.BadRequest,"CSRF enforced");
+var locked=await Post("/Account/Login","/Account/Login",new(){{"Username","qalocked"},{"Password","QA-only-Temporary!39"}});Check(locked.StatusCode==HttpStatusCode.OK,"Locked account denied");
+var login=await Post("/Account/Login","/Account/Login",new(){{"Username","qaadmin"},{"Password","QA-only-Temporary!39"},{"ReturnUrl","https://example.invalid"}});Check(login.StatusCode==HttpStatusCode.Redirect&&!login.Headers.Location!.IsAbsoluteUri,"Login and open redirect protection");
+foreach(var p in new[]{"/","/Catalog","/Catalog/Details/1","/Admin/Products","/Admin/Products/Create","/Admin/Products/Edit/1","/Admin/Products/Details/1","/Admin/Users","/Admin/Users/Create","/Admin/Users/Edit/1","/Admin/Users/Details/1","/Admin/Coupons","/Admin/NhaCungCap/Create"}){var(r,html)=await Get(p);Check(r.StatusCode==HttpStatusCode.OK&&html.Contains("FALCON"),"Render "+p);File.WriteAllText("rendered/"+p.Replace('/','_')+".html",html);}
+var(_,coupons)=await Get("/Admin/Coupons");Check(WebUtility.HtmlDecode(coupons).Contains("Phân hệ Coupons đang chờ tích hợp từ TV2"),"Coupons placeholder");
+var(_,filtered)=await Get("/Catalog?price=under30");Check(!filtered.Contains("QA Vehicle"),"Price filter");
+var(_,found)=await Get("/Catalog?search=Vehicle&cc=125to150");Check(found.Contains("QA Vehicle"),"Search and cc filter");
+var bad=await Post("/Admin/Products/Create","/Admin/Products/Create",new(){{"ProductName","QA"},{"Slug","BAD SLUG"},{"CategoryId","1"},{"Price","-1"},{"Displacement","0"},{"StockQuantity","-1"},{"Status","Unknown"}});Check(bad.StatusCode==HttpStatusCode.OK,"Product invalid form rejected");
+var newUser=new Dictionary<string,string>{{"Username","qanew"},{"Email","qanew@example.invalid"},{"Password","QA-new-password-39!"},{"ConfirmPassword","QA-new-password-39!"},{"RoleId","2"}};
+var created=await Post("/Admin/Users/Create","/Admin/Users/Create",newUser);Check(created.StatusCode==HttpStatusCode.Redirect,"Users create");
+var dup=await Post("/Admin/Users/Create","/Admin/Users/Create",newUser);Check(dup.StatusCode==HttpStatusCode.OK,"Users duplicate rejected");
+long newId;string hash;
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();var u=await db.Users.SingleAsync(u=>u.Username=="qanew");newId=u.UserId;hash=u.PasswordHash;Check(hash!="QA-new-password-39!"&&scope.ServiceProvider.GetRequiredService<IPasswordHasher<AppUser>>().VerifyHashedPassword(u,hash,"QA-new-password-39!")!=PasswordVerificationResult.Failed,"Password hash verification");}
+var edit=await Post("/Admin/Users/Edit/"+newId,"/Admin/Users/Edit/"+newId,new(){{"UserId",newId.ToString()},{"Email","qachanged@example.invalid"},{"RoleId","2"},{"Status","INACTIVE"}});Check(edit.StatusCode==HttpStatusCode.Redirect,"Users edit without username/password");
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();var u=await db.Users.FindAsync(newId);Check(u!.Email=="qachanged@example.invalid"&&u.PasswordHash==hash,"Edit retains existing password hash");}
+foreach(var(m,valid,label) in new[]{(new NhaCungCap{TenNhaCungCap="Supplier",SoDienThoai=null,LoaiNhaCungCap="Xe"},true,"Nullable phone"),(new NhaCungCap{TenNhaCungCap="Supplier",LoaiNhaCungCap="Dealer"},false,"Supplier type"),(new NhaCungCap{TenNhaCungCap=new string('x',101)},false,"Supplier name length"),(new NhaCungCap{TenNhaCungCap="Supplier",SoDienThoai=new string('1',16)},false,"Supplier phone length")})Check(Validator.TryValidateObject(m,new ValidationContext(m),new List<ValidationResult>(),true)==valid,label);
+var createdProduct=await Post("/Admin/Products/Create","/Admin/Products/Create",new(){{"ProductName","QA Added"},{"Slug","qa-added"},{"CategoryId","1"},{"Price","48000000"},{"Displacement","150"},{"StockQuantity","7"},{"Status","Active"}});Check(createdProduct.StatusCode==HttpStatusCode.Redirect,"Products create valid");
+var duplicateProduct=await Post("/Admin/Products/Create","/Admin/Products/Create",new(){{"ProductName","QA Added"},{"Slug","qa-added"},{"CategoryId","1"},{"Price","48000000"},{"Displacement","150"},{"StockQuantity","7"},{"Status","Active"}});Check(duplicateProduct.StatusCode==HttpStatusCode.OK,"Products duplicate slug rejected");
+var editProduct=await Post("/Admin/Products/Edit/1","/Admin/Products/Edit/1",new(){{"ProductId","1"},{"ProductName","QA Vehicle"},{"Slug","qa-vehicle"},{"CategoryId","1"},{"Price","45000000"},{"Displacement","125"},{"StockQuantity","2"},{"Status","Active"}});Check(editProduct.StatusCode==HttpStatusCode.Redirect,"Products edit valid");
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();var p=await db.Products.Include(p=>p.Images).SingleAsync(p=>p.ProductId==1);Check(p.Price==45000000&&p.StockQuantity==2&&p.PrimaryImageUrl=="/uploads/products/sh125-main.jpg","Products price/stock updated and original image retained");p.Images.Add(new ProductImage{ImageUrl="/uploads/products/not-supplied.jpg",IsPrimary=false});await db.SaveChangesAsync();}
+var(_,gallery)=await Get("/Catalog/Details/1");Check(gallery.Contains("/images/missing.svg"),"Missing gallery uses explicit placeholder");
+using(var scope=factory.Services.CreateScope()) {
+ var services=scope.ServiceProvider;
+ var ctx=new Microsoft.AspNetCore.Http.DefaultHttpContext{RequestServices=services,User=new System.Security.Claims.ClaimsPrincipal(new System.Security.Claims.ClaimsIdentity(new[]{new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name,"qaadmin")},"qa"))};
+ Microsoft.AspNetCore.Http.EndpointHttpContextExtensions.SetEndpoint(ctx,new Microsoft.AspNetCore.Http.Endpoint(null,new Microsoft.AspNetCore.Http.EndpointMetadataCollection(),"qa"));
+ var route=new Microsoft.AspNetCore.Routing.RouteData();route.Values["area"]="Admin";route.Values["controller"]="NhaCungCap";route.Values["action"]="Index";
+ var ac=new Microsoft.AspNetCore.Mvc.ActionContext(ctx,route,new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor());
+ var fixtures=new Dictionary<string,object>{{"NhaCungCap/Index",new List<NhaCungCap>{new(){MaNhaCungCap=1,TenNhaCungCap="QA supplier",SoDienThoai=null}}},{"NhaCungCap/Details",new NhaCungCap{MaNhaCungCap=1,TenNhaCungCap="QA supplier"}},{"NhaCungCap/Edit",new NhaCungCap{MaNhaCungCap=1,TenNhaCungCap="QA supplier"}},{"Home/Index",new Falcon.Web.Services.DashboardData{DoanhThuTheoThang=Enumerable.Range(1,12).Select(m=>new Falcon.Web.Services.MonthlyRevenue{Thang=m,Nam=2026}).ToList()}}};
+ foreach(var(name,model) in fixtures){var result=services.GetRequiredService<Microsoft.AspNetCore.Mvc.ViewEngines.ICompositeViewEngine>().GetView(null,"/Areas/Admin/Views/"+name+".cshtml",true);Check(result.Success,"Locate Razor "+name);using var writer=new StringWriter();var vd=new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(services.GetRequiredService<Microsoft.AspNetCore.Mvc.ModelBinding.IModelMetadataProvider>(),new Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary()){Model=model};var temp=new Microsoft.AspNetCore.Mvc.ViewFeatures.TempDataDictionary(ctx,services.GetRequiredService<Microsoft.AspNetCore.Mvc.ViewFeatures.ITempDataProvider>());await result.View!.RenderAsync(new Microsoft.AspNetCore.Mvc.Rendering.ViewContext(ac,result.View,vd,temp,writer,new Microsoft.AspNetCore.Mvc.ViewFeatures.HtmlHelperOptions()));Check(writer.ToString().Contains("FALCON"),"Render fixture "+name);File.WriteAllText("rendered/fixture_"+name.Replace('/','_')+".html",writer.ToString());}
+}
+using(var scope=factory.Services.CreateScope()){var db=scope.ServiceProvider.GetRequiredService<FalconDbContext>();var u=await db.Users.FindAsync(1L);u!.Status="LOCKED";await db.SaveChangesAsync();}
+var(revoked,_)=await Get("/Admin/Coupons");Check(revoked.StatusCode==HttpStatusCode.Redirect&&revoked.Headers.Location!.ToString().Contains("Login"),"Cookie revocation after lock");
+Console.WriteLine($"TOTAL {checks} checks passed. Isolated EF InMemory tests; not SQL Server persistence tests.");
+
+}}

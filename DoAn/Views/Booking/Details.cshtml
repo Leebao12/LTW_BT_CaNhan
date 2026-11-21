@@ -1,0 +1,3 @@
+@model TestDriveBooking
+@{ViewData["Title"]="Chi tiết lịch hẹn";}
+<section class="container section"><partial name="_BookingDetail"/>@if(BookingPolicy.CanCancel(Model)){<form asp-action="Cancel" asp-route-id="@Model.BookingId" method="post" class="mt-4" data-confirm="Bạn chắc chắn muốn hủy lịch lái thử?"><button class="btn btn-outline-danger">Hủy lịch hẹn</button></form>}<a asp-action="Index" class="btn fc-outline mt-3">← Lịch hẹn của tôi</a></section>

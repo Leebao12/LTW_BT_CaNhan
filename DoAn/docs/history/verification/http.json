@@ -1,0 +1,108 @@
+[
+  {
+    "path": "/Account/Login",
+    "status": 200,
+    "redirect": null,
+    "seconds": 0.32
+  },
+  {
+    "path": "/Home/Pending?feature=Booking",
+    "status": 200,
+    "redirect": null,
+    "seconds": 0.03
+  },
+  {
+    "path": "/Admin",
+    "status": 302,
+    "redirect": "http://localhost:5080/Account/Login?ReturnUrl=%2FAdmin",
+    "seconds": 0.01
+  },
+  {
+    "path": "/Admin/Products",
+    "status": 302,
+    "redirect": "http://localhost:5080/Account/Login?ReturnUrl=%2FAdmin%2FProducts",
+    "seconds": 0.0
+  },
+  {
+    "path": "/Admin/Users",
+    "status": 302,
+    "redirect": "http://localhost:5080/Account/Login?ReturnUrl=%2FAdmin%2FUsers",
+    "seconds": 0.0
+  },
+  {
+    "path": "/Admin/NhaCungCap",
+    "status": 302,
+    "redirect": "http://localhost:5080/Account/Login?ReturnUrl=%2FAdmin%2FNhaCungCap",
+    "seconds": 0.0
+  },
+  {
+    "path": "/Admin/Coupons",
+    "status": 302,
+    "redirect": "http://localhost:5080/Account/Login?ReturnUrl=%2FAdmin%2FCoupons",
+    "seconds": 0.0
+  },
+  {
+    "path": "/",
+    "status": 503,
+    "redirect": null,
+    "seconds": 5.69
+  },
+  {
+    "path": "/Catalog",
+    "status": 503,
+    "redirect": null,
+    "seconds": 0.11
+  },
+  {
+    "path": "/Catalog/Details/1",
+    "status": 503,
+    "redirect": null,
+    "seconds": 0.04
+  },
+  {
+    "path": "/assets/bootstrap.min.css",
+    "status": 200,
+    "redirect": null,
+    "seconds": 0.01
+  },
+  {
+    "path": "/assets/bootstrap.bundle.min.js",
+    "status": 200,
+    "redirect": null,
+    "seconds": 0.01
+  },
+  {
+    "path": "/assets/catalog.css",
+    "status": 200,
+    "redirect": null,
+    "seconds": 0.0
+  },
+  {
+    "path": "/assets/hero.jpg",
+    "status": 200,
+    "redirect": null,
+    "seconds": 0.0
+  },
+  {
+    "path": "/css/integrated.css",
+    "status": 200,
+    "redirect": null,
+    "seconds": 0.0
+  },
+  {
+    "path": "/js/integrated.js",
+    "status": 200,
+    "redirect": null,
+    "seconds": 0.0
+  },
+  {
+    "path": "/uploads/products/sh125-main.jpg",
+    "status": 200,
+    "redirect": null,
+    "seconds": 0.0
+  },
+  {
+    "path": "POST /Account/Logout without antiforgery",
+    "status": 400
+  }
+]

@@ -1,0 +1,23 @@
+@model Falcon.Web.Models.Admin.ProductFormViewModel
+@{
+    ViewData["Title"] = "Thêm sản phẩm xe máy";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Thêm sản phẩm xe máy</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+</div>
+<div class="card"><div class="card-body p-4">
+    <form asp-area="Admin" asp-controller="Products" asp-action="Create"
+          method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <partial name="_Form" model="Model" />
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+            <button type="submit" class="btn btn-gold"><i class="bi bi-plus-circle"></i> Lưu sản phẩm</button>
+        </div>
+    </form>
+</div></div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

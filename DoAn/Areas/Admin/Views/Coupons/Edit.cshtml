@@ -1,0 +1,4 @@
+@model CouponEditVm
+@{ViewData["Title"]="Sửa mã giảm giá";var coupon=(Coupon)ViewBag.Coupon;}
+<div data-modal-content class="commerce-card commerce-form"><h1 class="h2">Sửa mã <span class="coupon-code-badge">@coupon.Code</span></h1><p class="muted">Mức giảm: @coupon.DiscountValue.ToString("N0") @(coupon.DiscountType=="Percentage"?"%":"₫") · Đã dùng @coupon.UsedCount lượt. Mã, loại và giá trị giảm được giữ nguyên.</p><form asp-action="Edit" asp-route-id="@coupon.CouponId" method="post"><div asp-validation-summary="All" class="text-danger"></div><partial name="_Form"/><div class="d-flex gap-2 mt-4"><button class="btn fc-btn">Lưu thay đổi</button><a asp-action="Index" class="btn fc-outline">Quay lại</a></div></form></div>
+@section Scripts{<partial name="_ValidationScriptsPartial"/>}

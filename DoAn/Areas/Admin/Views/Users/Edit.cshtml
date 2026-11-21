@@ -1,0 +1,176 @@
+@model Falcon.Web.Models.UserEditVm
+
+@{
+    ViewData["Title"] = "Sửa tài khoản";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+
+        <div class="filter-panel">
+
+            <p class="eyebrow">
+                FALCON / UPDATE USER
+            </p>
+
+            <h2 class="admin-title mb-2">
+                Chỉnh sửa tài khoản
+            </h2>
+
+            <p class="admin-muted mb-4">
+                Cập nhật thông tin cho
+                <strong class="text-warning">
+                    @Model.Username
+                </strong>
+            </p>
+
+            <form asp-area="Admin"
+                  asp-controller="Users"
+                  asp-action="Edit"
+                  asp-route-id="@Model.UserId"
+                  method="post">
+
+                <input asp-for="UserId"
+                       type="hidden" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="admin-error mb-3"></div>
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <label class="admin-label">
+                            Tên đăng nhập
+                        </label>
+
+                        <input value="@Model.Username"
+                               class="form-control"
+                               readonly />
+
+                        <div class="form-text text-muted">
+                            Không thể thay đổi tên đăng nhập.
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Email"
+                               class="admin-label">
+                            Email
+                        </label>
+
+                        <input asp-for="Email"
+                               type="email"
+                               class="form-control" />
+
+                        <span asp-validation-for="Email"
+                              class="admin-error"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="RoleId"
+                               class="admin-label">
+                            Vai trò
+                        </label>
+
+                        <select asp-for="RoleId"
+                                asp-items="ViewBag.RoleOptions"
+                                class="form-select">
+                        </select>
+
+                        <span asp-validation-for="RoleId"
+                              class="admin-error"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Status"
+                               class="admin-label">
+                            Trạng thái
+                        </label>
+
+                        <select asp-for="Status"
+                                class="form-select">
+
+                            <option value="ACTIVE">
+                                Đang hoạt động
+                            </option>
+
+                            <option value="INACTIVE">
+                                Ngừng hoạt động
+                            </option>
+
+                            <option value="LOCKED">
+                                Đã khóa
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="Status"
+                              class="admin-error"></span>
+                    </div>
+                </div>
+
+                <hr class="border-secondary my-4" />
+
+                <h4 class="text-warning mb-2">
+                    Đổi mật khẩu
+                </h4>
+
+                <p class="muted small">
+                    Bỏ trống cả hai ô nếu không muốn đổi mật khẩu.
+                </p>
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <label asp-for="NewPassword"
+                               class="admin-label">
+                            Mật khẩu mới
+                        </label>
+
+                        <input asp-for="NewPassword"
+                               type="password"
+                               autocomplete="new-password"
+                               class="form-control"
+                               placeholder="Nhập mật khẩu mới" />
+
+                        <span asp-validation-for="NewPassword"
+                              class="admin-error"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ConfirmNewPassword"
+                               class="admin-label">
+                            Xác nhận mật khẩu
+                        </label>
+
+                        <input asp-for="ConfirmNewPassword"
+                               type="password"
+                               autocomplete="new-password"
+                               class="form-control"
+                               placeholder="Nhập lại mật khẩu" />
+
+                        <span asp-validation-for="ConfirmNewPassword"
+                              class="admin-error"></span>
+                    </div>
+
+                </div>
+
+                <div class="d-flex flex-wrap gap-3 mt-4">
+
+                    <button type="submit"
+                            class="btn fc-btn">
+                        Lưu thay đổi
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn fc-outline">
+                        Hủy chỉnh sửa
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

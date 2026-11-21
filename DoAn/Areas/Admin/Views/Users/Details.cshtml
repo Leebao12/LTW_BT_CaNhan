@@ -1,0 +1,125 @@
+@model Falcon.Web.Models.AppUser
+
+@{
+    ViewData["Title"] = "Chi tiết tài khoản";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+
+        <div class="filter-panel">
+
+            <div class="d-flex justify-content-between
+                        align-items-center flex-wrap gap-3 mb-4">
+
+                <div>
+                    <p class="eyebrow">
+                        ACCOUNT DETAILS
+                    </p>
+
+                    <h2 class="admin-title">
+                        @Model.Username
+                    </h2>
+
+                    <p class="muted mb-0">
+                        Mã tài khoản: #@Model.UserId
+                    </p>
+                </div>
+
+                @if (Model.Status == "ACTIVE")
+                {
+                    <span class="badge bg-success fs-6">
+                        Đang hoạt động
+                    </span>
+                }
+                else if (Model.Status == "LOCKED")
+                {
+                    <span class="badge bg-danger fs-6">
+                        Đã khóa
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary fs-6">
+                        Ngừng hoạt động
+                    </span>
+                }
+
+            </div>
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <div class="admin-panel h-100">
+                        <p class="muted small mb-2">
+                            Tên đăng nhập
+                        </p>
+
+                        <h5>@Model.Username</h5>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="admin-panel h-100">
+                        <p class="muted small mb-2">
+                            Địa chỉ Email
+                        </p>
+
+                        <h5 class="text-break">
+                            @Model.Email
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="admin-panel h-100">
+                        <p class="muted small mb-2">
+                            Vai trò
+                        </p>
+
+                        <h5 class="text-warning">
+                            @Model.Role.RoleName
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="admin-panel h-100">
+                        <p class="muted small mb-2">
+                            Đăng nhập gần nhất
+                        </p>
+
+                        <h5>
+                            @(Model.LastLoginAt.HasValue
+                                                        ? Model.LastLoginAt.Value
+                                                        .ToString("dd/MM/yyyy HH:mm")
+                                                        : "Chưa đăng nhập")
+                        </h5>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="alert alert-secondary mt-4">
+                Thông tin mật khẩu được bảo mật và không
+                hiển thị trên trang chi tiết.
+            </div>
+
+            <div class="d-flex flex-wrap gap-3 mt-4">
+
+@if(Model.Role.RoleName!="Admin"){                <a asp-action="Edit"
+                   asp-route-id="@Model.UserId"
+                   class="btn fc-btn">
+                    Chỉnh sửa
+                </a>}
+
+                <a asp-action="Index"
+                   class="btn fc-outline">
+                    Quay về danh sách
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</div>

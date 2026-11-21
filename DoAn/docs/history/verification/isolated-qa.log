@@ -1,0 +1,75 @@
+/workspace/scratch/17fabfa45d0d/work/qa/Program.cs(57,681): warning CS8602: Dereference of a possibly null reference. [/workspace/scratch/17fabfa45d0d/work/qa/qa.csproj]
+info: Microsoft.EntityFrameworkCore.Update[30100]
+      Saved 8 entities to in-memory store.
+PASS Anonymous denied /Admin
+PASS Anonymous denied /Admin/Products
+PASS Anonymous denied /Admin/Users
+PASS Anonymous denied /Admin/NhaCungCap
+PASS Anonymous denied /Admin/Coupons
+PASS CSRF enforced
+PASS Antiforgery /Account/Login
+PASS Locked account denied
+PASS Antiforgery /Account/Login
+info: Microsoft.EntityFrameworkCore.Update[30100]
+      Saved 1 entities to in-memory store.
+PASS Login and open redirect protection
+PASS Render /
+PASS Render /Catalog
+PASS Render /Catalog/Details/1
+PASS Render /Admin/Products
+PASS Render /Admin/Products/Create
+PASS Render /Admin/Products/Edit/1
+PASS Render /Admin/Products/Details/1
+PASS Render /Admin/Users
+PASS Render /Admin/Users/Create
+PASS Render /Admin/Users/Edit/1
+PASS Render /Admin/Users/Details/1
+PASS Render /Admin/Coupons
+PASS Render /Admin/NhaCungCap/Create
+PASS Coupons placeholder
+PASS Price filter
+PASS Search and cc filter
+PASS Antiforgery /Admin/Products/Create
+PASS Product invalid form rejected
+PASS Antiforgery /Admin/Users/Create
+info: Microsoft.EntityFrameworkCore.Update[30100]
+      Saved 1 entities to in-memory store.
+PASS Users create
+PASS Antiforgery /Admin/Users/Create
+PASS Users duplicate rejected
+PASS Password hash verification
+PASS Antiforgery /Admin/Users/Edit/4
+info: Microsoft.EntityFrameworkCore.Update[30100]
+      Saved 1 entities to in-memory store.
+PASS Users edit without username/password
+PASS Edit retains existing password hash
+PASS Nullable phone
+PASS Supplier type
+PASS Supplier name length
+PASS Supplier phone length
+PASS Antiforgery /Admin/Products/Create
+info: Microsoft.EntityFrameworkCore.Update[30100]
+      Saved 1 entities to in-memory store.
+PASS Products create valid
+PASS Antiforgery /Admin/Products/Create
+PASS Products duplicate slug rejected
+PASS Antiforgery /Admin/Products/Edit/1
+info: Microsoft.EntityFrameworkCore.Update[30100]
+      Saved 1 entities to in-memory store.
+PASS Products edit valid
+PASS Products price/stock updated and original image retained
+info: Microsoft.EntityFrameworkCore.Update[30100]
+      Saved 1 entities to in-memory store.
+PASS Missing gallery uses explicit placeholder
+PASS Locate Razor NhaCungCap/Index
+PASS Render fixture NhaCungCap/Index
+PASS Locate Razor NhaCungCap/Details
+PASS Render fixture NhaCungCap/Details
+PASS Locate Razor NhaCungCap/Edit
+PASS Render fixture NhaCungCap/Edit
+PASS Locate Razor Home/Index
+PASS Render fixture Home/Index
+info: Microsoft.EntityFrameworkCore.Update[30100]
+      Saved 1 entities to in-memory store.
+PASS Cookie revocation after lock
+TOTAL 57 checks passed. Isolated EF InMemory tests; not SQL Server persistence tests.

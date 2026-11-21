@@ -1,0 +1,1 @@
+Chromium launch failed in this environment: process_singleton_posix.cc socket() failed: Operation not permitted. Razor compiled/rendered; no desktop/mobile visual or modal-interaction test completed.

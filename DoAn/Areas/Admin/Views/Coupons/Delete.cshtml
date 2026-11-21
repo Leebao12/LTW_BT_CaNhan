@@ -1,0 +1,6 @@
+@model Coupon
+@{ViewData["Title"]="Xác nhận xóa mã";bool protectedCoupon=ViewBag.Protected;}
+<div data-modal-content class="commerce-card commerce-form"><h1 class="h3">@(protectedCoupon?"Giữ lại lịch sử ưu đãi":"Xác nhận xóa mã giảm giá")</h1><p>Mã <span class="coupon-code-badge">@Model.Code</span></p>
+@if(protectedCoupon){<p class="text-warning">Mã đã có lượt dùng hoặc đơn hàng liên quan, không thể xóa. Bạn có thể vô hiệu hóa để ngừng áp dụng cho đơn mới.</p><form asp-action="Toggle" asp-route-id="@Model.CouponId" method="post"><input type="hidden" name="version" value="@CouponRules.Version(Model)"><input type="hidden" name="active" value="false"><button class="btn fc-btn" disabled="@(!Model.IsActive)">Vô hiệu hóa mã</button></form>}
+else{<p>Thao tác sẽ xóa mã chưa sử dụng. Bạn có chắc chắn muốn tiếp tục?</p><form asp-action="Delete" asp-route-id="@Model.CouponId" method="post"><input type="hidden" name="version" value="@CouponRules.Version(Model)"><button class="btn btn-danger">Xác nhận xóa</button></form>}
+<a asp-action="Index" class="btn fc-outline mt-3">Quay lại</a></div>

@@ -1,0 +1,377 @@
+@model Falcon.Web.Models.Admin.ProductIndexViewModel
+
+@{
+    ViewData["Title"] = "Quản lý sản phẩm xe máy";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="d-flex flex-wrap justify-content-between
+            align-items-center gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="bi bi-box-seam text-warning"></i>
+            Quản lý sản phẩm
+        </h2>
+        <p class="text-muted mb-0">
+            Quản lý danh mục xe máy trong cửa hàng
+        </p>
+    </div>
+
+    <a asp-area="Admin"
+       asp-controller="Products"
+       asp-action="Create"
+       class="btn btn-gold">
+        <i class="bi bi-plus-circle me-1"></i>
+        Thêm sản phẩm
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle"></i>
+        @TempData["Success"]
+        <button type="button" class="btn-close"
+                data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle"></i>
+        @TempData["Error"]
+    </div>
+}
+
+<!-- THẺ THỐNG KÊ -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted mb-2">
+                    Tổng mẫu xe
+                </div>
+                <h2 class="fw-bold text-warning mb-0">
+                    @Model.AllCount
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted mb-2">
+                    Sản phẩm nổi bật
+                </div>
+                <h2 class="fw-bold text-info mb-0">
+                    @Model.FeaturedCount
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="text-muted mb-2">
+                    Mẫu xe hết hàng
+                </div>
+                <h2 class="fw-bold text-danger mb-0">
+                    @Model.OutOfStockCount
+                </h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TÌM KIẾM VÀ BỘ LỌC -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form asp-action="Index" method="get"
+              class="row g-3 align-items-end">
+
+            <div class="col-lg-5">
+                <label class="form-label">Tìm kiếm</label>
+                <input type="text"
+                       name="search"
+                       value="@Model.Search"
+                       maxlength="100"
+                       class="form-control"
+                       placeholder="Tên xe, hãng xe, slug..." />
+            </div>
+
+            <div class="col-lg-3">
+                <label class="form-label">Hãng xe</label>
+                <select name="categoryId" class="form-select">
+                    <option value="">Tất cả hãng</option>
+
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.CategoryId"
+                                selected="@(Model.CategoryId == category.CategoryId)">
+                            @category.CategoryName
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-lg-2">
+                <label class="form-label">Trạng thái</label>
+                <select name="status" class="form-select">
+                    <option value="">Tất cả</option>
+                    <option value="Active"
+                            selected="@(Model.Status == "Active")">
+                        Đang bán
+                    </option>
+                    <option value="Discontinued"
+                            selected="@(Model.Status == "Discontinued")">
+                        Ngừng bán
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-lg-2">
+                <div class="d-flex gap-2">
+                    <button type="submit"
+                            class="btn btn-gold flex-grow-1">
+                        <i class="bi bi-search"></i>
+                        Lọc
+                    </button>
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary"
+                       title="Xóa bộ lọc">
+                        Xóa lọc
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- BẢNG DANH SÁCH -->
+<div class="card">
+    <div class="card-header py-3 d-flex justify-content-between
+                align-items-center">
+        <h5 class="mb-0">Danh sách xe máy</h5>
+        <span class="text-muted small">
+            @Model.TotalCount kết quả
+        </span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th class="ps-3">ID</th>
+                    <th>Ảnh</th>
+                    <th>Thông tin xe</th>
+                    <th>Giá bán</th>
+                    <th>Phân khối</th>
+                    <th>Tồn kho</th>
+                    <th>Trạng thái</th>
+                    <th class="text-end pe-3">Thao tác</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var product in Model.Products)
+                {
+                    <tr>
+                        <td class="ps-3">
+                            #@product.ProductId
+                        </td>
+
+                        <td>
+                            @if (!string.IsNullOrEmpty(product.PrimaryImageUrl))
+                            {
+                                <img src="@product.PrimaryImageUrl"
+                                     alt="@product.ProductName"
+                                     loading="lazy"
+                                     style="width:90px;height:65px;
+                                            object-fit:contain;
+                                            background:#fff;
+                                            border-radius:8px;"
+                                     onerror="this.style.display='none'" />
+                            }
+                            else
+                            {
+                                <div class="text-muted">
+                                    <i class="bi bi-image fs-3"></i>
+                                </div>
+                            }
+                        </td>
+
+                        <td>
+                            <div class="fw-semibold">
+                                @product.ProductName
+                            </div>
+
+                            <div class="small text-muted">
+                                @product.Category.CategoryName
+                            </div>
+
+                            @if (product.IsFeatured)
+                            {
+                                <span class="badge bg-warning text-dark mt-1">
+                                    <i class="bi bi-star-fill"></i>
+                                    Nổi bật
+                                </span>
+                            }
+                        </td>
+
+                        <td class="fw-semibold text-warning">
+                            @product.Price.ToString("N0") đ
+                        </td>
+
+                        <td>
+                            @product.Displacement cc
+                        </td>
+
+                        <td>
+                            @if (product.StockQuantity == 0)
+                            {
+                                <span class="badge bg-danger">
+                                    Hết hàng
+                                </span>
+                            }
+                            else if (product.StockQuantity <= 5)
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    Còn @product.StockQuantity xe
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">
+                                    @product.StockQuantity xe
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (product.Status == "Active")
+                            {
+                                <span class="badge bg-success">
+                                    Đang bán
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    Ngừng bán
+                                </span>
+                            }
+                        </td>
+
+                        <td class="pe-3">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a asp-action="Details"
+                                   asp-route-id="@product.ProductId"
+                                   class="btn btn-sm btn-outline-info"
+                                   title="Chi tiết">
+                                    Chi tiết
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@product.ProductId"
+                                   class="btn btn-sm btn-outline-gold"
+                                   title="Chỉnh sửa">
+                                    Sửa
+                                </a>
+
+                                <a asp-action="Delete"
+                                   asp-route-id="@product.ProductId"
+                                   class="btn btn-sm btn-outline-danger"
+                                   title="Xóa">
+                                    Xóa
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+                @if (Model.Products.Count == 0)
+                {
+                    <tr>
+                        <td colspan="8"
+                            class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                            Không tìm thấy sản phẩm phù hợp.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PHÂN TRANG -->
+    @if (Model.TotalPages > 1)
+    {
+        <div class="card-footer py-3">
+            <nav>
+                <ul class="pagination pagination-sm
+                           justify-content-end mb-0">
+
+                    <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-page="@(Model.Page - 1)"
+                           asp-route-search="@Model.Search"
+                           asp-route-categoryId="@Model.CategoryId"
+                           asp-route-status="@Model.Status">
+                            Trước
+                        </a>
+                    </li>
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(Model.Page == i ? "active" : "")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-page="@i"
+                               asp-route-search="@Model.Search"
+                               asp-route-categoryId="@Model.CategoryId"
+                               asp-route-status="@Model.Status">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-page="@(Model.Page + 1)"
+                           asp-route-search="@Model.Search"
+                           asp-route-categoryId="@Model.CategoryId"
+                           asp-route-status="@Model.Status">
+                            Sau
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .pagination .page-link {
+            background: #292930;
+            color: #E5C158;
+            border-color: #38383F;
+        }
+
+        .pagination .page-item.active .page-link {
+            background: #D4AF37;
+            border-color: #D4AF37;
+            color: #121212;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            background: #222228;
+            color: #777;
+        }
+    </style>
+}

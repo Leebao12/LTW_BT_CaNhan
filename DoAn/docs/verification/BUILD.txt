@@ -1,0 +1,7 @@
+  FALCON_Website -> /workspace/scratch/17fabfa45d0d/update/output/FALCON_Website/bin/Release/net8.0/Falcon.Web.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.16

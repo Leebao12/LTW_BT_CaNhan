@@ -1,0 +1,141 @@
+NHIỆM VỤ TÍCH HỢP CUỐI: FALCON .NET 8 + DATABASE MỚI + AUTH/REGISTER + GIỎ HÀNG/ĐẶT MUA + LÁI THỬ + CRUD COUPONS TV2
+
+Bạn là kỹ sư ASP.NET Core MVC .NET 8, SQL Server, bảo mật ứng dụng và UI/UX. Hãy trực tiếp đọc, giải nén, phân tích, sửa mã nguồn và bàn giao một project chạy được; không chỉ đưa kế hoạch hoặc code minh họa.
+
+TỆP ĐẦU VÀO BẮT BUỘC
+1) Project mới nhất của tôi: FALCON_Website_Integrated(1).zip, hoặc bản ZIP project Visual Studio mới hơn mà tôi đính kèm. Nếu có nhiều bản, chọn bản mới nhất và ghi rõ.
+2) Database chuẩn mới đã được đồng bộ: FALCON_FullDatabase_DongBo_4TaiKhoan.sql. Đây là schema/seed chuẩn để đối chiếu. KHÔNG dùng một bản SQL cũ khác làm chuẩn.
+3) MÃ NGUỒN THÀNH VIÊN 2 VỪA GỬI: Falcon_Frontend_TV2.rar. PHẢI GIẢI NÉN, đọc ít nhất coupons.html, booking.html, checkout.html, cart.html, success.html, orders.html, assets/app.js, assets/catalog.js, assets/catalog.css và README.md; kiểm tra các thành phần còn lại có liên quan. Đây là frontend HTML/JS chạy Live Server/localStorage, KHÔNG PHẢI project C#/SQL Server. Mục tiêu là sử dụng ý tưởng, bố cục, form, modal và logic nghiệp vụ của TV2 làm cơ sở chuyển đổi thành chức năng MVC backend thật.
+4) Hình ảnh tham chiếu phần giao diện “NHÓM 1 / PHÂN CÔNG ĐỒ ÁN – Đội ngũ thực hiện” cần xóa khỏi website công khai.
+5) Nếu có hồ sơ SRS/ảnh xe đi kèm, đối chiếu nhưng ưu tiên yêu cầu mới nhất và SQL chuẩn khi mâu thuẫn.
+
+THỨ TỰ ƯU TIÊN NGUỒN: SQL chuẩn -> yêu cầu cập nhật mới nhất của tôi -> mã nguồn project MVC đang chạy -> mã nguồn UI TV2 (để chuyển đổi) -> SRS/ảnh tham khảo. Tuyệt đối không chép thẳng JavaScript localStorage thành "backend đã tích hợp".
+
+A. MỤC TIÊU KHÔNG THỂ THAY ĐỔI
+- Chỉ một ASP.NET Core MVC web project .NET 8, một database SQL Server QuanLyCuaHangXeMay, một kết nối DefaultConnection và giao diện FALCON đen-vàng thống nhất.
+- Duy trì CRUD /Admin/Products (TV1), /Admin/Users (TV3), /Admin/NhaCungCap (TV4). **TV2 QUỐC BẢO ĐÃ GỬI MÃ GIAO DIỆN COUPONS + BOOKING**, vì vậy hãy thay trang chờ /Admin/Coupons bằng CRUD Coupons kết nối SQL Server THẬT, sử dụng đầy đủ giao diện/logic hợp lý từ Falcon_Frontend_TV2.rar làm nền, ghi nhận công sức TV2. Tích hợp cả đặt lịch lái thử, giỏ và checkout có điều kiện Coupon. Không tuyên bố TV2 đã viết backend sẵn: chính bạn đang phải chuyển frontend của TV2 sang MVC service/controller.
+- Có đúng MỘT tài khoản Admin mặc định từ dữ liệu mẫu; giao diện đăng ký công khai CHỈ tạo CUSTOMER. Không cho khách hàng tự chọn RoleId hoặc nâng quyền bằng thao tác POST giả mạo.
+- Database mới chỉ seed 1 Admin và 3 Customer để tiện thử chức năng đăng ký. Không tự thêm lại 35 tài khoản demo cũ. Không tạo mẫu xe/ảnh xe mới vì tôi sẽ tự thêm sau.
+- Website vừa mở khi CHƯA đăng nhập: chỉ hiển thị nút “Đăng nhập” ở góc phải thanh điều hướng về tài khoản/quyền, KHÔNG hiển thị link “Quản trị”, các nút quản lý, tên người dùng, logout hoặc một Dashboard quản trị công khai. Khách vẫn được xem danh mục và chi tiết xe.
+- Trên trang xe, vẫn có CTA “Đặt mua”, “Thêm vào giỏ hàng”, “Đặt lịch lái thử” nếu chức năng phù hợp. Nếu CHƯA đăng nhập mà bấm các CTA này: KHÔNG tạo đơn/giỏ/lịch; hiển thị modal Bootstrap đẹp theo theme FALCON với lời nhắc “Vui lòng đăng nhập để tiếp tục”, nút Đăng nhập và liên kết Đăng ký. Giữ returnUrl/an toàn và sản phẩm đang xem để tiếp tục sau khi đăng nhập. Có phương án fallback đến trang Login nếu JS tắt.
+- Đăng nhập đúng vai trò: Admin vào /Admin với menu quản lý; Customer trở về giao diện khách hàng, thấy tài khoản, giỏ hàng, lịch lái thử, đơn hàng (những mục có backend). Customer không được truy cập /Admin bằng cách nhập URL trực tiếp. Guest truy cập /Admin phải chuyển đến login với returnUrl an toàn.
+- XÓA HOÀN TOÀN khỏi trang chủ PUBLIC section có nhãn “NHÓM 1 / PHÂN CÔNG ĐỒ ÁN”, tiêu đề “Đội ngũ thực hiện”, bốn card TV1/TV2/TV3/TV4 và các link “Mở phân hệ”. Tìm trong Views/Home/Index.cshtml, CSS/JS và các trang public liên quan; tránh để khoảng trắng lớn hoặc dấu vết dư. Không xóa controller hay chức năng quản trị của từng thành viên.
+
+B. ĐỐI CHIẾU CODE HIỆN TẠI TRƯỚC KHI SỬA
+Bản FALCON_Website_Integrated trước có (phải đọc lại bản đính kèm, không giả định bản này không đổi):
+- Controllers/AccountController.cs chỉ có Login/Logout/Denied; chưa có Register GET/POST.
+- Models/LoginVm.cs, Models/AppUser.cs, Data/FalconDbContext.cs, Program.cs đã có cookie authentication và IPasswordHasher<AppUser>.
+- Views/Account/Login.cshtml chưa có câu “Chưa có tài khoản? Hãy đăng ký”.
+- Views/Shared/_Layout.cshtml đang hiển thị “Quản trị” và “Giỏ hàng” kể cả khi khách chưa đăng nhập.
+- Views/Home/Index.cshtml có section công khai “Đội ngũ thực hiện” phải xóa (giống ảnh).
+- Views/Catalog/Details.cshtml có nút “Đặt mua · đang hoàn thiện” bị disabled; các đường dẫn Booking/Cart đang trỏ /Home/Pending?feature=...
+- Areas/Admin/Controllers/CouponsController.cs và Areas/Admin/Views/Coupons/Index.cshtml hiện chỉ là trang chờ, phải chuyển thành CRUD đầy đủ dựa vào tài sản TV2, không tạo controller trùng.
+- Areas/Admin/Controllers/UsersController.cs còn cho phép tạo tài khoản với RoleId được gửi từ form và thay đổi RoleId trong Edit. Theo yêu cầu mới, không được tạo Admin thứ hai/cho nâng quyền Admin. Phải giới hạn quyền ở SERVER ngay cả khi form gửi RoleId=Admin.
+- Services/AdminBootstrap.cs hỗ trợ --create-admin; sau khi database đã có Admin thì không được tạo Admin thứ hai.
+Hãy xác minh lại bằng tệp thực tế và nêu nếu cấu trúc/phiên bản đã thay đổi, không đoán mò.
+
+C. DATABASE, TÀI KHOẢN VÀ ĐĂNG KÝ
+1. Dùng schema đúng theo FALCON_FullDatabase_DongBo_4TaiKhoan.sql. Đọc toàn bộ 14 bảng và FK, nhất là Roles, Users, CustomerProfiles, Products, Categories, ProductImages, Showrooms, Orders, OrderDetails, TestDriveBookings, Coupons.
+2. Tài khoản demo mặc định: 1 Admin + 3 Customer. PasswordHash là nguồn xác thực thật, dùng ASP.NET Core PasswordHasher (Identity V3); cột [Password] nếu có chỉ là ghi chú demo local, KHÔNG được dùng để đăng nhập, hiển thị trên website, trả về API, ghi log, hoặc lưu plaintext cho tài khoản đăng ký mới. Tránh sửa hash thành plaintext. Không hardcode mật khẩu Admin vào frontend.
+3. Làm form Đăng nhập /Account/Login với username + password, validate, thông báo lỗi gọn, returnUrl an toàn; có câu chính xác “Chưa có tài khoản? Hãy đăng ký” liên kết /Account/Register.
+4. GET/POST /Account/Register: Username, Email, Password, ConfirmPassword, họ tên, điện thoại tùy chọn, địa chỉ tùy chọn nếu phù hợp CustomerProfiles. Dùng DTO/ViewModel riêng; validation server và client, chống trùng username/email, băm PasswordHash, lưu Users.RoleId theo bản ghi RoleName='Customer' LẤY TRÊN SERVER, Status='ACTIVE'; tạo CustomerProfiles nhất quán trong một giao dịch khi có yêu cầu đủ dữ liệu. Tài khoản mới không được chọn role. Xử lý DbUpdateException unique key và double-submit. Sau đăng ký chuyển đến Login kèm thông báo thành công (hoặc tự đăng nhập nếu được triển khai nhất quán, giải thích rõ).
+5. Admin vẫn có thể quản lý Users trong /Admin/Users theo phạm vi TV3 nhưng KHÔNG được tạo Admin thứ hai, không cấp quyền Admin cho Customer, không vô hiệu hóa/xóa tài khoản Admin duy nhất. Cho phép quản lý Customer theo chức năng hiện có. Nếu có phần tự đổi mật khẩu Admin, chỉ dành cho Admin đã xác thực.
+6. Đăng xuất qua POST có anti-forgery; cookie HttpOnly, xác thực server-side, role authorization, không tin client/localStorage, không dựa vào ẩn nút để bảo mật.
+7. Với SQL đã nhập từ phiên bản cũ 36 Users: không âm thầm xóa tài khoản/giao dịch; báo cách backup và xử lý dữ liệu cũ riêng. Trên DB mới thì phải có đúng 4 tài khoản khởi tạo.
+
+D. ĐIỀU HƯỚNG VÀ TRẢI NGHIỆM THEO VAI TRÒ
+- Guest: trang chủ, Catalog, chi tiết xe, tìm/lọc xe; thanh phải chỉ có “Đăng nhập” trong nhóm thao tác tài khoản/quản trị. Các CTA cần đăng nhập mở modal thay vì chuyển ngay đến /Home/Pending. Không hiển thị menu Admin.
+- Customer: thanh phải có tên tài khoản/tài khoản của tôi, Giỏ hàng, Lịch lái thử, Đơn hàng của tôi, Đăng xuất; không có nút Admin. “Thêm vào giỏ”, “Đặt mua”, “Đặt lịch lái thử” phải có xử lý máy chủ thật, không phải chỉ ghi localStorage hoặc hiện màn Pending.
+- Admin: nhìn thấy menu “Quản trị” hoặc vào dashboard Admin, ba CRUD đang có và Coupons placeholder; nút quản lý chỉ Admin mới thấy. Không dùng link quản trị công khai làm shortcut từ phần giới thiệu nhóm.
+- Dùng partial/view component hay logic Razor theo User.Identity và User.IsInRole hợp lý; luôn kiểm tra quyền lại tại controller/action.
+- Modal Bootstrap responsive, focus hợp lý, đóng được, có thông báo rõ; các link Đăng nhập/Đăng ký hoạt động với URL an toàn và không có open redirect.
+
+E. GIỎ HÀNG, ĐẶT MUA, LÁI THỬ: BACKEND CHỨ KHÔNG PHẢI PLACEHOLDER
+- Chỉ sử dụng bảng hiện có trừ khi một thay đổi schema thật sự bắt buộc và được trình bày rõ. Database hiện KHÔNG CÓ bảng CartItems, do đó có thể triển khai giỏ hàng trong server-side Session, phân tách theo UserId và xóa giỏ liên quan khi logout. Nếu dùng Session, cấu hình AddDistributedMemoryCache/AddSession và UseSession đúng thứ tự trong Program.cs; không nhầm Session cart với bảng giỏ hàng lâu dài. KHÔNG lưu giá/tổng tiền từ client làm dữ liệu chuẩn. Nếu chọn phương án khác thì giải thích, tránh tăng bảng tùy tiện.
+- Khách đã đăng nhập có thể thêm xe vào giỏ, đổi số lượng, bỏ mục, xem tổng. Mọi thao tác ghi dùng POST có anti-forgery, revalidate quyền và dữ liệu phía server. Chặn hàng ngừng bán và tồn kho bằng 0. Khi checkout/đặt mua: recheck giá và tồn kho từ dbo.Products trên server; ghi Orders + OrderDetails với UserId đúng, OrderCode duy nhất, CustomerName/Phone/Email theo hồ sơ; trạng thái ban đầu Processing/Pending phù hợp SQL, cập nhật trong transaction. Chỉ giảm tồn kho vào mốc nghiệp vụ quy định; không trừ hai lần khi đặt và khi hoàn tất, không giả nhận tiền thanh toán thật.
+- Nếu chưa làm thanh toán online, đặt mua là tạo yêu cầu mua hàng hoặc đơn đang chờ xác nhận, hiển thị trạng thái rõ ràng; không gọi đó là đã thanh toán. Hãy tích hợp nhập/áp dụng Coupon tại checkout theo SQL thật: xác thực Coupon ở server, tính giảm giá và tiền cọc mẫu 10% nếu phù hợp giao diện và SQL, ghi Orders.CouponId/DiscountAmount/TotalAmount/DepositAmount đồng bộ; cập nhật Coupons.UsedCount đúng mốc nghiệp vụ và trong cùng transaction với lưu đơn. Không tăng UsedCount trước khi SaveChanges/commit thành công.
+- Đặt lịch lái thử: Customer chọn xe, Showroom đang hoạt động, ngày/khung giờ tương lai; xác thực user từ cookie, kiểm tra input/giới hạn thời gian, ghi dbo.TestDriveBookings với UserId, CarId, ShowroomId, BookingCode duy nhất, Status='Pending'. Chỉ dùng thông tin người dùng hiện tại, không cho sửa UserId POST. Hiển thị lịch của CHÍNH họ và trạng thái từ DB, tránh lộ lịch của người khác. Nếu trùng lịch theo quy tắc nghiệp vụ đã thiết kế, xử lý lỗi phù hợp.
+- Giữ các yêu cầu không thay đổi của TV1 Products, TV3 Users, TV4 NhaCungCap; tích hợp **Coupons TV2 từ frontend vừa được gửi thành CRUD SQL Server thật**. Không tự fake việc áp dụng Coupon thành công, không giữ trang Coupons ở trạng thái chờ nếu đã xây dựng thành công.
+
+F. GIAO DIỆN FALCON
+Màu nền #121212/#0D0D0D; vàng kim #D4AF37/#E5C158; card #1E1E24/#2C2C34; chữ #F5F5F7; cảnh báo #E53935. Thống nhất Login, Register, modal, Cart, Booking, Header, Dashboard. Giữ ảnh xe hiện có và đường dẫn, không thêm sản phẩm hoặc ảnh mẫu mới. Trang public chỉ tập trung vào thương hiệu, sản phẩm và các CTA; XÓA phần giới thiệu thành viên theo ảnh kèm. Trên menu Admin cũng dùng tên chức năng thuần như “Sản phẩm”, “Tài khoản”, “Nhà cung cấp”, “Mã giảm giá”, không hiển thị hậu tố TV1/TV2/TV3/TV4; giữ phân công trong tài liệu dự án thay vì giao diện thương mại.
+
+G. KIỂM THỬ VÀ NGHIỆM THU BẮT BUỘC
+1. Mở ZIP, kiểm kê file, phát hiện khác biệt giữa project và schema SQL, sửa không xóa nhầm tính năng.
+2. dotnet restore / dotnet build (nếu có SDK), kiểm tra Razor/ViewImports/Layout/route, một Program.cs và một .csproj ở thư mục gốc.
+3. SQL test: 14 bảng, 1 Admin + 3 Customer trên database MỚI, hash login khớp mật khẩu seed, user vừa đăng ký có Role Customer và CustomerProfiles theo yêu cầu.
+4. Test guest: vào /Catalog, /Catalog/Details và xem xe không cần login; nút thêm giỏ/đặt mua/lái thử bật modal; không thấy /Admin hay nút quản lý trên navbar.
+5. Test Register: nhập hợp lệ tạo Customer; trùng email, username, confirm sai, RoleId giả trong request đều bị chặn an toàn.
+6. Test Login: Admin chỉ vào dashboard Admin; Customer vào website; Guest redirect Login khi vào /Admin; Customer vào /Admin bị 403, không có dữ liệu Admin bị lộ.
+7. Test Customer: giỏ hàng thêm/sửa/xóa; tạo một đơn Pending vào Orders/OrderDetails; đặt lịch vào TestDriveBookings và đọc lại đúng UserId; các tài khoản khác không thấy dữ liệu của nhau.
+8. Test Admin: Products, Users (Customer-only create/edit), NhaCungCap còn chạy; Coupons có CRUD thật theo SQL (tạo mã, xem/lọc, sửa, bật/tắt, xóa có điều kiện), dữ liệu đồng bộ với checkout. Bảo đảm Admin duy nhất không bị xóa/khóa/tạo bản sao qua giao diện.
+9. Kiểm tra xóa chính xác section "Đội ngũ thực hiện" khỏi trang chủ, không còn link mở CRUD của TV1/TV2/TV3/TV4 trong public UI, không còn khoảng trống bất thường.
+10. Nếu không có SQL Server hay .NET SDK trong môi trường, ghi rõ CHƯA KIỂM THỬ THỰC TẾ, không tự tuyên bố 0 lỗi.
+
+H. BÀN GIAO
+- Xuất ZIP project chạy chính FALCON_Website_Auth_Cart_Booking_CouponsTV2.zip, giữ nguyên một web project ASP.NET Core MVC .NET 8 với .csproj và Program.cs ở thư mục gốc.
+- README.md hướng dẫn dùng Visual Studio, SSMS, thiết lập DefaultConnection, chạy F5, các tài khoản demo, cách kiểm thử role.
+- CHANGELOG.md nêu file đã sửa, route mới, schema mapping; ghi rõ TV2 cung cấp frontend Coupons/Booking và phần backend được tích hợp ở lần này; các giới hạn còn tồn tại.
+- Nếu cần cập nhật SQL, xuất script migration riêng an toàn, KHÔNG DROP DATABASE/TABLE hay xóa dữ liệu thật; không tự làm lệch SQL chuẩn vừa được đưa vào.
+- Đảm bảo project xuất ra có thể mở trực tiếp bằng Visual Studio; không để một thư mục cha thừa gây nhầm project.
+
+I. BẮT BUỘC TÍCH HỢP THÀNH QUẢ TV2 VÀ XỬ LÝ CÁC LỖI ĐÃ PHÁT HIỆN TRONG RAR
+
+I.1. Kết quả kiểm kê xác định từ Falcon_Frontend_TV2.rar (xác minh lại bằng mã nguồn thật):
+- Gói RAR chỉ chứa HTML, CSS, JavaScript và cấu hình IDE, KHÔNG có .csproj, DbContext, backend C#, kết nối SQL Server hay migration. README ghi rõ website chạy Live Server và các thao tác mô phỏng bằng localStorage.
+- coupons.html: giao diện quản trị danh sách, thống kê, tìm kiếm/lọc theo loại/trạng thái, modal tạo, modal sửa, modal chi tiết, cảnh báo xóa mã đã dùng/vô hiệu hóa. Các form dùng các id như create-coupon-form, edit-coupon-form.
+- assets/app.js: nhóm chức năng Coupons ở gần comment "QUẢN LÝ MÃ GIẢM GIÁ (/Admin/Coupons)", có dữ liệu initialCoupons (FALCON5, FALCON1M, FALCONVIP, EXPIRED2025), localStorage, create/edit/view/toggle/delete; checkout có nhập mã giảm và tính tiền cọc 10%. Đây là mô phỏng trình duyệt, KHÔNG phải các dòng dữ liệu trong SQL server.
+- booking.html: form tên, điện thoại, email, bằng lái tùy chọn, CarId, ShowroomId, AppointmentDate, AppointmentTimeSlot, ghi chú. Tuy nhiên nội dung booking.html trùng bản frontend FALCON trước đó; mã JS booking cũng đang lưu lịch vào localStorage. Không nên ghi nhận đó là CRUD booking SQL đã hoàn thành.
+- app.js booking chỉ lưu code/name/phone/product/showroom/date/time/status; không đưa email, bằng lái và CustomerNotes từ form vào đối tượng booking. Cần ánh xạ đầy đủ vào TestDriveBookings theo sự cho phép của database, KHÔNG log thông tin bằng lái.
+- app.js dùng product, showroom và coupon demo/hardcode thay cho DB thật; một số link admin.html, account.html, cart.html, coupons.html là các trang tĩnh. Phải chuyển các liên kết sang route MVC thực.
+- app.js tăng UsedCount ngay trước việc lưu đơn (`save('orders')`), điều này có thể tạo sai lệch nếu lưu đơn thất bại. Phải thay bằng transaction SQL Server.
+- Nút "Đặt lại dữ liệu mẫu" trên coupons.html đặt lại dữ liệu localStorage; trên ứng dụng thật PHẢI BỎ NÚT NÀY hoặc giới hạn hoàn toàn ở dữ liệu thử tách biệt, tuyệt đối không cho reset dbo.Coupons trên website Admin.
+- Popup chặn xóa mã đã dùng trong frontend hiện dựa vào usedCount và danh sách Orders trên localStorage; trên backend bắt buộc kiểm tra `Orders.CouponId` thật và ràng buộc FK, không dựa vào điều kiện JS.
+- Phần navbar hiện phơi link Quản trị công khai và chưa có auth; dùng yêu cầu phân quyền Guest/Customer/Admin ở các mục trước để sửa.
+- Nếu thấy bất kỳ mâu thuẫn nào giữa mô tả ở đây và code đính kèm, lấy code đính kèm làm bằng chứng và nêu rõ khác biệt; không tưởng tượng backend không tồn tại.
+
+I.2. CHUYỂN TV2 COUPONS SANG CRUD MVC + SQL SERVER THẬT
+1. Thay placeholder `/Admin/Coupons` hiện có bằng `CouponsController` Area Admin, service (nếu cần), EF mapping của `dbo.Coupons` và Views Razor theo `_LayoutAdmin.cshtml` chung. Giữ `ProductsController`, `UsersController`, `NhaCungCapController` chạy bình thường.
+2. Không chép nguyên `coupons.html` với script global hoặc giữ localStorage làm nguồn chuẩn. Tận dụng bố cục bảng, card thống kê, modal và trải nghiệm đen-vàng, nhưng lấy dữ liệu từ dbo.Coupons, các form submit POST có AntiForgery và ModelState. Chỉ Admin được mở và thao tác, kể cả khi nhập trực tiếp URL.
+3. Index: danh sách, tìm mã, bộ lọc Percentage/FixedAmount, Active/Inactive/Expired/Depleted, thống kê tổng mã/đang dùng/hết hạn/lượt dùng, phân trang phù hợp. Tình trạng hiệu lực được tính bằng IsActive, StartDate, EndDate, UsedCount/UsageLimit từ DB, không dùng trạng thái `active` do client tự gửi để làm căn cứ.
+4. Create: Code duy nhất, chuẩn hóa chữ hoa; Description; DiscountType chỉ `Percentage` hoặc `FixedAmount`; DiscountValue > 0 và Percentage <=100; MinOrderAmount >=0; MaxDiscountAmount NULL hoặc >=0; StartDate<=EndDate; UsageLimit>0; UsedCount mặc định 0, IsActive theo form; các kiểu `decimal`/`DateTime`/`int` phải khớp SQL. Không nhận trực tiếp `CouponId`, `UsedCount`, `CreatedAt` từ request Create.
+5. Edit: cho phép đổi mô tả, đơn tối thiểu, trần giảm, thời hạn, giới hạn lượt sử dụng và IsActive; xem xét giữ Code/DiscountType/DiscountValue bất biến theo giao diện TV2. Không cho UsageLimit < UsedCount; không cho sửa trực tiếp UsedCount. Bảo vệ khỏi overposting và cập nhật đồng thời.
+6. Details: thông tin đầy đủ mã và danh sách các đơn đã dùng mã lấy qua `Orders.CouponId` khi có quyền Admin; không dùng dữ liệu Orders của localStorage.
+7. Delete: nếu có bất kỳ Orders tham chiếu mã => KHÔNG xóa, hiển thị cảnh báo và cung cấp thao tác IsActive=false; chỉ xóa mã hoàn toàn chưa có tham chiếu, có xác nhận POST + anti-forgery + bắt lỗi FK khi race condition. Đừng xóa lịch sử đơn.
+8. Không đưa nút Reset demo vào Admin thật. Không tự INSERT lại 4 coupon mẫu trong JS; dùng 25 coupon hoặc số lượng THỰC TẾ của file SQL hiện tại, đọc động từ DB.
+9. Checkout: Customer nhập mã, server tra SQL, kiểm tra IsActive, thời hạn theo giờ địa phương thống nhất, UsedCount<UsageLimit, MinOrderAmount, DiscountType, DiscountValue, MaxDiscountAmount. Tính SubTotal từ Products và quantity trên server; DiscountAmount=0..SubTotal; TotalAmount=SubTotal-DiscountAmount; DepositAmount theo chính sách demo 10% trên TotalAmount (nếu giữ), PaymentStatus=Pending, OrderStatus=Processing theo SQL. Ghi Orders.CouponId thật.
+10. Khi lưu đơn thành công, cập nhật UsedCount một lần theo mốc nghiệp vụ được định nghĩa rõ, trong CÙNG transaction với tạo Orders/OrderDetails. Dùng cơ chế khóa/atomic conditional update/transaction phù hợp SQL Server để tránh vượt UsageLimit khi nhiều người đồng thời đặt hàng. Nếu rollback thì cả order lẫn UsedCount rollback. Không tăng UsedCount khi chỉ xem thử mã hoặc chỉ nhập mã vào form. Kiểm tra logic hủy đơn để UsedCount không bị trừ hoặc cộng nhiều lần, và thống nhất với dữ liệu demo đã seed từ SQL.
+11. Chỉ triển khai Voucher/Coupon theo bảng và logic được TV2 gửi, không tự mở rộng sang điểm thưởng, voucher phân cấp hay bảng mới không có trong SQL.
+
+I.3. TÍCH HỢP BOOKING TV2 VÀO SQL SERVER
+1. Dùng booking.html làm UI tham khảo, nhưng tạo luồng Razor MVC thật (ví dụ GET/POST `/Booking/Create`, GET `/Booking/MyBookings`) sử dụng dbo.TestDriveBookings; tạo chức năng Admin xem/duyệt/hủy lịch theo nhu cầu demo nếu chưa có, với route Admin riêng được bảo vệ, không làm mất CRUD chính Coupons.
+2. Guest nhấn "Đặt lịch lái thử" phải thấy popup yêu cầu đăng nhập; server cũng phải yêu cầu cookie Customer. Sau login quay lại đúng xe/booking nếu returnUrl an toàn.
+3. Form hiển thị xe và Showrooms đang hoạt động lấy từ DB, không hardcode 5 tên xe FALCON trong HTML mẫu hay các ID showroom 1/2/3; danh sách xe chỉ sử dụng Products hiện có, không thêm xe mới.
+4. Bind và kiểm tra trên SERVER: FullName, PhoneNumber, Email, CarId, ShowroomId, DriverLicenseNumber (nếu thật sự cần, tùy chọn), AppointmentDate, AppointmentTimeSlot, CustomerNotes. Chọn ngày/giờ tương lai; xác thực showroom hợp lệ, xe tồn tại/đang bán; khung giờ phù hợp và không bị trùng lịch theo quy tắc nghiệp vụ rõ ràng. UserId LUÔN lấy từ principal đăng nhập, không từ form.
+5. Sau khi lưu booking thành công, tạo BookingCode duy nhất và Status='Pending'; lưu đủ dữ liệu khớp cột TestDriveBookings. Trang thành công phải hiển thị lịch thực vừa tạo, KHÔNG nói đã lưu vào browser. Khách chỉ xem/hủy lịch của chính mình nếu nghiệp vụ cho phép.
+6. Không giữ giấy phép lái xe trong localStorage hoặc log. Trường này trong SQL là optional; nếu không cần thiết cho demo, có thể không yêu cầu nhập và giải thích quyết định.
+7. Quy tắc kiểm tra trùng của bản JS chỉ dùng phone+date+time, không phân biệt showroom/xe và không chống đồng thời; hãy thiết kế xác nhận ở database/service để không chặn sai hoặc nhận trùng ngoài ý muốn.
+8. Với lịch mẫu hiện có trong SQL, hiển thị từ DB và kiểm tra chính xác UserId; không chèn lại lịch mẫu của `app.js`.
+
+I.4. PHỐI HỢP BOOKING, CART, CHECKOUT, COUPONS, AUTH
+- Ưu tiên hoàn thiện theo đúng một luồng: Guest xem xe -> mở popup đăng nhập nếu muốn mua/lái thử -> Login/Register Customer -> Customer có giỏ, đặt đơn, áp dụng Coupon lấy từ SQL, đặt lịch từ SQL -> Admin quản lý Products/Users/NhaCungCap/Coupons và xem lịch/đơn nếu đã triển khai.
+- Coupon và Booking phải không phụ thuộc vào trang HTML tĩnh hay Live Server; dùng route Razor, auth, AntiForgery, model validation, exception handling, và SQL transaction đúng ngữ cảnh.
+- Chỉ một Admin mặc định, công khai chỉ đăng ký Customer. Không tái tạo User demo hoặc thêm Products mới.
+- Luôn tách frontend đóng góp từ TV2 với backend do bạn tích hợp; ghi công TV2 ở README/CHANGELOG thay vì chèn thông tin nhóm lên trang chủ.
+
+I.5. CHECKLIST BỔ SUNG BẮT BUỘC
+- Đăng nhập Admin mở `/Admin/Coupons` thấy dữ liệu `dbo.Coupons` thật (không phải localStorage); Guest/Customer không được mở.
+- Tạo Coupon (% và số tiền), kiểm tra trùng Code, DiscountValue vượt 100%, EndDate<StartDate, UsageLimit<UsedCount, IsActive.
+- Sửa/chi tiết/lọc/tắt Coupon và xóa mã chưa dùng, chặn xóa mã đã có Orders, kiểm tra trạng thái DB trong SSMS.
+- Checkout: Coupon hợp lệ áp dụng chính xác; mã hết hạn/chưa hiệu lực/khóa/hết lượt/không đạt min bị từ chối; tổng tiền không âm; tiền cọc 10% tính trên tổng sau giảm; số liệu trong Orders và Coupons.UsedCount khớp; transaction rollback không tăng lượt.
+- Tạo Customer, đăng nhập, mở đặt lịch với xe đang có trong SQL, chọn showroom và ngày/giờ phù hợp, lưu TestDriveBookings và xem được trong "Lịch của tôi"; user khác không được đọc lịch này; Guest bị modal/chặn server.
+- Giữ UI đen-vàng, xóa section "Đội ngũ thực hiện", không còn nav "Quản trị" đối với Guest, không còn các đường dẫn html tĩnh bị hỏng.
+- Có thể chạy Build và F5 trong Visual Studio; không tuyên bố thành công nếu chưa thực thi.
+
+J. CÁCH THỨC BÀN GIAO SAU LẦN CẬP NHẬT NÀY
+- Xuất DUY NHẤT một project ZIP đã tích hợp đủ ba CRUD cũ + CRUD Coupons TV2 + luồng Booking/Cart/Checkout/Auth; không nộp `Falcon_Frontend_TV2.rar` hay source JS localStorage tách biệt làm hệ thống thứ hai.
+- Cập nhật README/CHANGELOG và INTEGRATION_REPORT (nếu tồn tại) với tên file TV2, những phần TV2 có thật, phần backend được chuyển đổi, schema/route và các trường hợp đã kiểm thử.
+- Nếu môi trường thiếu SQL Server, tạo kịch bản kiểm thử thủ công tại Visual Studio + SSMS, ghi rõ giới hạn. Không tự ý reset database, xóa dữ liệu demo hay thay PasswordHash bằng mật khẩu rõ chữ.
+
+HÃY BẮT ĐẦU ĐỌC VÀ ĐỐI CHIẾU CẢ PROJECT FALCON MVC + SQL CHUẨN + TOÀN BỘ RAR TV2, SAU ĐÓ TRỰC TIẾP SỬA CODE, TÍCH HỢP VÀ XUẤT ZIP. KHÔNG CHỈ VIẾT KẾ HOẠCH.
+

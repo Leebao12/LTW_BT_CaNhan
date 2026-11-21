@@ -1,0 +1,484 @@
+{
+  "inputs": [
+    {
+      "file": "FALCON_Website_Integrated(2).zip",
+      "bytes": 3672811,
+      "sha256": "7e0d0f0d95715047dca9511d1f4cfe3ff04d29fa1f603eee12c58987af5813a0"
+    },
+    {
+      "file": "FALCON_FullDatabase_DongBo_4TaiKhoan(2).sql",
+      "bytes": 58799,
+      "sha256": "950a7bb26d867e7515eb59d2429f70fbdb6793ddcd2e6b84b45eff587e442605"
+    },
+    {
+      "file": "Falcon_Frontend_TV2(1).rar",
+      "bytes": 324857,
+      "sha256": "edc4e68d26b8c72d22004f7c741ce833772fe0a2548aab1d56dc1780bdbcae44"
+    },
+    {
+      "file": "FALCON_Prompt_CapNhat_TichHop_TV2_Coupons_Booking.zip",
+      "bytes": 11495,
+      "sha256": "73c836356e99999cdde114def6b1a9a78c3f2f100a5edfa1368426441c33a6e4"
+    },
+    {
+      "file": "image(20261120-140103).png",
+      "bytes": 42342,
+      "sha256": "7de2b83e7911c0f50bdffaa218ac669a2a02cc40f36fefb29734afcff6b9ff35"
+    }
+  ],
+  "baseline_files": 151,
+  "tv2_inventory": [
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/catalog.html",
+      "bytes": 4117,
+      "sha256": "327c48e61b5de246bb39369e78ba26e40980f16bd1e1c0e44ef00ac6292ec16e"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/index.html",
+      "bytes": 4189,
+      "sha256": "6f2b9900661046ea87de135a96a7299421df6bb0ee55b7e3d55bcbfc7e94c081"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/inventory.html",
+      "bytes": 2805,
+      "sha256": "7dd659e0b04c435b4a33e6e4c8cd432da6fab2d16b52a406ede8e04de562fc4d"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/checkout.html",
+      "bytes": 3507,
+      "sha256": "4e2bb9e376368cbb3a7a5cb6a9f0124242f69c38ac52b28f1ae2819c03e6f887"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/account.html",
+      "bytes": 2656,
+      "sha256": "1b8ff670b10499352eda2c1746fd930edf2dc5d339c4143872c8874d3296fae4"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/reports.html",
+      "bytes": 2807,
+      "sha256": "0a3ae94fb87f2320e5e1d6533dfb8a11822480888eff9ee349a2d4cbac397d7e"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/success.html",
+      "bytes": 2481,
+      "sha256": "b9487b27da46a53eefa9cac4b14ca8508a94b0cba255d619456829b6e267aa0a"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/coupons.html",
+      "bytes": 18372,
+      "sha256": "91e76fbc971ee85132beaf5cf67571ab4a91c5081677630d6436e2cb02349956"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/detail.html",
+      "bytes": 2406,
+      "sha256": "27860edc69d7f43ce89e52ab887f9f42f04c3a1f7cf13ece9757173e2db68034"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/booking.html",
+      "bytes": 8694,
+      "sha256": "6c3aeb6ab55ac5872d428fda11962477caf5ec2c9cd55f4d6645a45592bd7537"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/cart.html",
+      "bytes": 2382,
+      "sha256": "c4ede1af8511f27453dc3080e13cf970dfb7cf37a29e0c2ccbb7f97245a63ee9"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/suppliers.html",
+      "bytes": 2803,
+      "sha256": "859144998d4ac52d7617ef4e0bfd9da23fa9bdb594eead10edae32ec05424bb1"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/admin.html",
+      "bytes": 2806,
+      "sha256": "0d3ecc5b191ebc2741ca09e8b1266a5ebb26d662343f798114351f2290c3ba25"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/README.md",
+      "bytes": 4766,
+      "sha256": "fc18febb4b6a527c1b71f09ff429c330b7c7855e6b2ad048ba2fd64e47b2e671"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/orders.html",
+      "bytes": 2818,
+      "sha256": "c92d064db478d8e53075d8dd58a03449455cc1ce956d1e12528fcd5df3e0ef16"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/tracking.html",
+      "bytes": 2678,
+      "sha256": "9181b5ff9ad72fcfc83012ba1965e28979539f6ec3645c14c9e2ac7a5de0c791"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/.vs/ProjectSettings.json",
+      "bytes": 37,
+      "sha256": "debe308c356f9f0c649ccd3bd0c9a2e921566eb38aaaad97de07e6a0ce9a1b33"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/.vs/VSWorkspaceState.json",
+      "bytes": 113,
+      "sha256": "6984e5d683b6488122f12c8f0d018ed8ece383a917609fbbc0d420640de5e2a3"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/.vs/slnx.sqlite",
+      "bytes": 90112,
+      "sha256": "c2c2ac162a825d9f738513b1077e7df96496c100a469717f540df18c67560af9"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/.vscode/extensions.json",
+      "bytes": 58,
+      "sha256": "4bc862f422ae4bf421207388566f1f2af3c6a1dfb0d4f53953696e56909dcfd2"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/.vscode/settings.json",
+      "bytes": 38,
+      "sha256": "6de9c9a6cabc1ddbf4da257aa979caa5c3849da09d8848dd45bcbbb0986c0876"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/assets/catalog.css",
+      "bytes": 3192,
+      "sha256": "a8c494df2482d228ba776fef7f0032dbc9278d0e8d91c7e118380b396d2aef5e"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/assets/bootstrap.bundle.min.js",
+      "bytes": 78468,
+      "sha256": "2aebc2552d7dadf4e3a0b80cc830c274e91146584dad8e29b04338b9ecedb363"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/assets/catalog.js",
+      "bytes": 7680,
+      "sha256": "2f181bd5d3cb3030dfb175eb17eee09f0e021f9ba671f8ec446a4317dd95d455"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/assets/app.js",
+      "bytes": 45114,
+      "sha256": "ffcc966949993baf4c1292b9854469e8bdec7cf1cd683158e6332bfe45735811"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/assets/hero.jpg",
+      "bytes": 222450,
+      "sha256": "11ce9791865db5024c9e01b83221941bfa2cc455483a58cbe8bdfe8edddb5c50"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/assets/bootstrap.min.css",
+      "bytes": 162720,
+      "sha256": "cfc391e34328c09f0680ae8ff3d63e86224ae7e71c973147ccb84540b2fdd9b8"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/.vs/Falcon_Frontend/config/applicationhost.config",
+      "bytes": 86045,
+      "sha256": "f0c465e27bdd843f46452768dffa796cedbb8f7c9faaa1b465236fdb0c38afea"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/.vs/Falcon_Frontend/v17/DocumentLayout.json",
+      "bytes": 2069,
+      "sha256": "051106c127f04556e8343ae0d80db759fe811dd5d03a8f4b331b62c8f06ecf75"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/.vs/Falcon_Frontend/v17/.wsuo",
+      "bytes": 15360,
+      "sha256": "5ea6d53e70be1457976ed535a293f1acdfa5e1509edaa27476f949faf3667b02"
+    },
+    {
+      "path": "Falcon_Frontend_TV2/Falcon_Frontend/.vs/Falcon_Frontend/FileContentIndex/df67d6fd-30f5-42b4-89b8-c479161afb5e.vsidx",
+      "bytes": 1661,
+      "sha256": "015a0e3331e043381da442c0c94e9dd7e23c26c55707617cbe05b6d1621dde92"
+    }
+  ],
+  "changes": [
+    {
+      "path": "Areas/Admin/Controllers/BookingsController.cs",
+      "change": "added"
+    },
+    {
+      "path": "Areas/Admin/Controllers/CouponsController.cs",
+      "change": "modified"
+    },
+    {
+      "path": "Areas/Admin/Controllers/OrdersController.cs",
+      "change": "added"
+    },
+    {
+      "path": "Areas/Admin/Controllers/ProductsController.cs",
+      "change": "modified"
+    },
+    {
+      "path": "Areas/Admin/Controllers/UsersController.cs",
+      "change": "modified"
+    },
+    {
+      "path": "Areas/Admin/Views/Bookings/Details.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Areas/Admin/Views/Bookings/Index.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Areas/Admin/Views/Coupons/Create.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Areas/Admin/Views/Coupons/Delete.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Areas/Admin/Views/Coupons/Details.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Areas/Admin/Views/Coupons/Edit.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Areas/Admin/Views/Coupons/Index.cshtml",
+      "change": "modified"
+    },
+    {
+      "path": "Areas/Admin/Views/Coupons/_Form.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Areas/Admin/Views/Orders/Details.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Areas/Admin/Views/Orders/Index.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Areas/Admin/Views/Products/_Form.cshtml",
+      "change": "modified"
+    },
+    {
+      "path": "Areas/Admin/Views/Shared/_LayoutAdmin.cshtml",
+      "change": "modified"
+    },
+    {
+      "path": "Areas/Admin/Views/Users/Details.cshtml",
+      "change": "modified"
+    },
+    {
+      "path": "Areas/Admin/Views/Users/Index.cshtml",
+      "change": "modified"
+    },
+    {
+      "path": "Areas/Admin/Views/_ViewImports.cshtml",
+      "change": "modified"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "change": "added"
+    },
+    {
+      "path": "Controllers/AccountController.cs",
+      "change": "modified"
+    },
+    {
+      "path": "Controllers/BookingController.cs",
+      "change": "added"
+    },
+    {
+      "path": "Controllers/CartController.cs",
+      "change": "added"
+    },
+    {
+      "path": "Controllers/CheckoutController.cs",
+      "change": "added"
+    },
+    {
+      "path": "Controllers/HomeController.cs",
+      "change": "modified"
+    },
+    {
+      "path": "Controllers/OrdersController.cs",
+      "change": "added"
+    },
+    {
+      "path": "Data/FalconDbContext.cs",
+      "change": "modified"
+    },
+    {
+      "path": "Database/FALCON_FullDatabase_DongBo_4TaiKhoan.sql",
+      "change": "added"
+    },
+    {
+      "path": "Database/Verify_ReadOnly.sql",
+      "change": "added"
+    },
+    {
+      "path": "FALCON_Website.sln",
+      "change": "added"
+    },
+    {
+      "path": "GlobalUsings.cs",
+      "change": "added"
+    },
+    {
+      "path": "INTEGRATION_REPORT.md",
+      "change": "modified"
+    },
+    {
+      "path": "Models/AppUser.cs",
+      "change": "modified"
+    },
+    {
+      "path": "Models/Commerce.cs",
+      "change": "added"
+    },
+    {
+      "path": "Models/CommerceForms.cs",
+      "change": "added"
+    },
+    {
+      "path": "Program.cs",
+      "change": "modified"
+    },
+    {
+      "path": "README.md",
+      "change": "modified"
+    },
+    {
+      "path": "Services/AdminBootstrap.cs",
+      "change": "modified"
+    },
+    {
+      "path": "Services/CartService.cs",
+      "change": "added"
+    },
+    {
+      "path": "Services/CommercePolicies.cs",
+      "change": "added"
+    },
+    {
+      "path": "ViewModels/Admin/ProductViewModels.cs",
+      "change": "modified"
+    },
+    {
+      "path": "Views/Account/Login.cshtml",
+      "change": "modified"
+    },
+    {
+      "path": "Views/Account/Profile.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Account/Register.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Booking/Create.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Booking/Details.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Booking/Index.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Cart/Add.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Cart/Index.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Catalog/Details.cshtml",
+      "change": "modified"
+    },
+    {
+      "path": "Views/Checkout/Index.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Home/Index.cshtml",
+      "change": "modified"
+    },
+    {
+      "path": "Views/Orders/Details.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Orders/Index.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Shared/_BookingDetail.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Shared/_CommercePager.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Shared/_Flash.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Shared/_Layout.cshtml",
+      "change": "modified"
+    },
+    {
+      "path": "Views/Shared/_LoginPrompt.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/Shared/_OrderDetail.cshtml",
+      "change": "added"
+    },
+    {
+      "path": "Views/_ViewImports.cshtml",
+      "change": "modified"
+    },
+    {
+      "path": "docs/INPUTS_AND_CHANGES.json",
+      "change": "added"
+    },
+    {
+      "path": "docs/REQUIREMENTS_UPDATE.txt",
+      "change": "added"
+    },
+    {
+      "path": "docs/SQL_ACCEPTANCE_CHECKLIST.md",
+      "change": "modified"
+    },
+    {
+      "path": "docs/verification/BUILD.txt",
+      "change": "added"
+    },
+    {
+      "path": "docs/verification/QA_RESULTS.txt",
+      "change": "added"
+    },
+    {
+      "path": "docs/verification/QA_SOURCE.cs.txt",
+      "change": "modified"
+    },
+    {
+      "path": "docs/verification/UI_LIMITATION.txt",
+      "change": "added"
+    },
+    {
+      "path": "scripts/Test-Isolated.ps1",
+      "change": "modified"
+    },
+    {
+      "path": "wwwroot/css/integrated.css",
+      "change": "modified"
+    },
+    {
+      "path": "wwwroot/js/commerce.js",
+      "change": "added"
+    }
+  ],
+  "source_guards": {
+    "original_images_preserved": true,
+    "image_asset_count": 10,
+    "latest_sql_byte_identical": true,
+    "tv4_sources_preserved": true,
+    "production_database_modified": false
+  }
+}
