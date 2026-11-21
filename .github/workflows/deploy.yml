@@ -1,5 +1,5 @@
 
-name: Deploy FALCON ASP.NET Core 9 to Somee
+name: Deploy FALCON .NET 9 to Somee
 
 on:
   push:
@@ -15,17 +15,49 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout source
+      # 1. Lay code
+      - name: Checkout
         uses: actions/checkout@v4
 
+      # 2. Cai .NET 9
       - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
-      - name: Publish FALCON Website
+      # 3. Publish project
+      - name: Publish FALCON
         run: dotnet publish ./DoAn/FALCON_Website.csproj -c Release -o ./publish --self-contained false
 
+      # 4. Tao cau hinh database Production
+      - name: Configure Somee Database
+        shell: pwsh
+        env:
+          DB_CONNECTION: ${{ secrets.SOMEE_DB_CONNECTION }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:DB_CONNECTION)) {
+            throw "Missing SOMEE_DB_CONNECTION secret"
+          }
+
+          $path = "./publish/appsettings.Production.json"
+          $config = @{}
+
+          if (Test-Path $path) {
+            $config = Get-Content $path -Raw | ConvertFrom-Json -AsHashtable
+          }
+
+          if (-not $config.ContainsKey("ConnectionStrings") -or
+              $null -eq $config["ConnectionStrings"]) {
+            $config["ConnectionStrings"] = @{}
+          }
+
+          $config["ConnectionStrings"]["DefaultConnection"] = $env:DB_CONNECTION
+
+          $config |
+            ConvertTo-Json -Depth 100 |
+            Set-Content $path -Encoding utf8
+
+      # 5. Deploy Somee
       - name: Deploy to Somee
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
